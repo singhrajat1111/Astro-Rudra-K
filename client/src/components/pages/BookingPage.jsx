@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 // Icons
 import { Calendar as CalendarIcon, Clock, Check } from "lucide-react";
-
+import CelestialPopup from "../CelestialPopup";
 // Custom UI Components
 import Calendar from "../ui/Calendar";
 import PricingNodeCard from "../PricingNodeCard";
@@ -16,6 +16,8 @@ export default function BookingPage() {
   const [selectedPlan, setSelectedPlan] = useState(null);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedTime, setSelectedTime] = useState("");
+  const [popup, setPopup] = useState(false);
+
 
   const [formData, setFormData] = useState({
     name: "",
@@ -75,9 +77,7 @@ export default function BookingPage() {
 
   // Time slot options
   const timeSlots = [
-    "09:00 AM", "10:00 AM", "11:00 AM", "12:00 PM",
-    "02:00 PM", "03:00 PM", "04:00 PM", "05:00 PM",
-    "06:00 PM", "07:00 PM"
+      "Morning", "Afternoon", "Evening"
   ];
 
   const updateForm = (field, value) => {
@@ -87,7 +87,7 @@ export default function BookingPage() {
   const navigate = useNavigate();
 
   const handleSubmit = () => {
-    navigate("/payment");
+     setPopup(true);
   };
 
   return (
@@ -384,13 +384,10 @@ export default function BookingPage() {
                   </button>
 
                   <EnergyBurstButton onClick={handleSubmit} className="w-full">
-                    Confirm & Pay ₹{selectedPlan?.price}
+                    Confirm & Proceed
                   </EnergyBurstButton>
                 </div>
-
-                <p className="text-xs text-[rgba(255,255,255,0.5)] mt-4 text-center">
-                  Secure payment powered by Razorpay
-                </p>
+                 <CelestialPopup open={popup} onClose={() => setPopup(false)} />
               </div>
             </div>
           </div>
