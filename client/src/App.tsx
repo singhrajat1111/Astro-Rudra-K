@@ -20,7 +20,7 @@ export default function App() {
     }, 1500);
   }, []);
 
-  const handleNavigate = (page) => {
+  const handleNavigate = (page: any) => {
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
