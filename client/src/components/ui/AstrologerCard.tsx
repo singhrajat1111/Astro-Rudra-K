@@ -24,6 +24,7 @@ export default function AstrologerCard({ name, experience, rating, skills, image
         overflow-hidden
         max-w-md mx-auto
       "
+      style={{ boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.37)", width : "350px"}}
     >
       {/* Glowing Border */}
       <div className="absolute inset-0 rounded-3xl pointer-events-none bg-gradient-to-br from-[#6C33FF]/20 to-[#4EA3FF]/20 blur-xl opacity-40" />
@@ -55,7 +56,7 @@ export default function AstrologerCard({ name, experience, rating, skills, image
         </div>
 
         {/* Skills */}
-        <div className="flex flex-wrap justify-center gap-2 mt-3">
+        <div className="flex flex-wrap justify-center text-center items-center gap-2 mt-3">
           {skills.map((skill, i) => (
             <span
               key={i}

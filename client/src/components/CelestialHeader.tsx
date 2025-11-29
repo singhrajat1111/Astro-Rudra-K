@@ -10,7 +10,7 @@ export default function CelestialHeader({ currentPage, onNavigate }) {
     { id: "home", label: "Home" },
     { id: "about", label: "About" },
     { id: "services", label: "Services" },
-    { id: "kundli", label: "Kundli Reading" },
+    { id: "astrologers", label: "Astrologers" },
     { id: "booking", label: "Book Consultation" },
     { id: "contact", label: "Contact" },
   ];
