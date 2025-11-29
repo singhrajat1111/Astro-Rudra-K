@@ -24,7 +24,6 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate initial loading
     setTimeout(() => {
       setIsLoading(false);
     }, 1500);
