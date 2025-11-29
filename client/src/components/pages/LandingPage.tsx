@@ -4,8 +4,13 @@ import CosmicCapsuleCard from "../CosmicCapsuleCard";
 import EnergyBurstButton from "../EnergyBurstButton";
 import NebulaGhostButton from "../NebulaGhostButton";
 import TestimonialGlassTile from "../TestimonialGlassTile";
+import Astrologers from "./AstrologerPage";
 
-export default function LandingPage({ onNavigate }) {
+interface LandingPageProps {
+  onNavigate: (path: string) => void; 
+}
+
+export default function LandingPage({ onNavigate }: LandingPageProps) {
   const services = [
     {
       icon: "🌟",
@@ -135,7 +140,7 @@ export default function LandingPage({ onNavigate }) {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4">
-              <EnergyBurstButton onClick={() => onNavigate("booking")}>
+              <EnergyBurstButton onClick={() => onNavigate("astrologers")}>
                 <Calendar className="w-5 h-5" />
                 Book Consultation
               </EnergyBurstButton>

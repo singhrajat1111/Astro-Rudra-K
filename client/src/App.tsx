@@ -8,6 +8,16 @@ import ServicesPage from "./components/pages/ServicesPage";
 import BookingPage from "./components/pages/BookingPage";
 import KundliReadingPage from "./components/pages/KundliReadingPage";
 import ContactPage from "./components/pages/ContactPage";
+import AstrologerPage from "./components/pages/AstrologerPage";
+
+export type PageName =
+  | "home"
+  | "about"
+  | "services"
+  | "booking"
+  | "kundli"
+  | "contact"
+  | "astrologers";
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState("home");
@@ -39,6 +49,8 @@ export default function App() {
         return <KundliReadingPage onNavigate={handleNavigate} />;
       case "contact":
         return <ContactPage />;
+      case "astrologers":                
+        return <AstrologerPage onNavigate={handleNavigate} />;
       default:
         return <LandingPage onNavigate={handleNavigate} />;
     }
