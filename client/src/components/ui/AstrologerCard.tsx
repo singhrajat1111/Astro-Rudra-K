@@ -1,5 +1,6 @@
 import { motion } from "motion/react";
 import { Star } from "lucide-react";
+import BookingPage from "../pages/BookingPage";
 
 interface AstrologerCardProps {
   name: string;
@@ -11,7 +12,15 @@ interface AstrologerCardProps {
   onReach: () => void;
 }
 
-export default function AstrologerCard({ name, experience, rating, skills, image, onView, onReach  }: AstrologerCardProps) { 
+export default function AstrologerCard({
+  name,
+  experience,
+  rating,
+  skills,
+  image,
+  onView,
+  onReach,
+}: AstrologerCardProps) {
   return (
     <motion.div
       whileHover={{ scale: 1.02 }}
@@ -24,13 +33,13 @@ export default function AstrologerCard({ name, experience, rating, skills, image
         overflow-hidden
         max-w-md mx-auto
       "
-      style={{ boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.37)", width : "350px"}}
+      style={{ boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.37)", width: "350px" }}
     >
       {/* Glowing Border */}
       <div className="absolute inset-0 rounded-3xl pointer-events-none bg-gradient-to-br from-[#6C33FF]/20 to-[#4EA3FF]/20 blur-xl opacity-40" />
 
       <div className="relative z-10 flex flex-col items-center gap-4">
-        
+
         {/* Avatar */}
         <div className="w-32 h-32 rounded-full bg-gradient-to-br from-[#6C33FF] to-[#4EA3FF] p-[3px] overflow-hidden">
           <div className="w-full h-full rounded-full bg-black/40 flex items-center justify-center">

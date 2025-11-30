@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence } from "framer-motion";
 import CelestialHeader from "./components/CelestialHeader";
 import CelestialFooter from "./components/CelestialFooter";
 import LandingPage from "./components/pages/LandingPage";
@@ -34,6 +34,7 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  
   const renderPage = () => {
     switch (currentPage) {
       case "home":

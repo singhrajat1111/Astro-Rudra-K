@@ -1,7 +1,10 @@
 import { useState } from "react";
-import { Star } from "lucide-react";
 import AstrologerCard from "../ui/AstrologerCard";
-import BookingPage from "./BookingPage";
+
+interface AstrologerPageProps {
+  onNavigate: (page: string) => void;
+}
+
 
 interface Astrologer {
   id: number;
@@ -21,7 +24,7 @@ const astrologers: Astrologer[] = [
     rating: 4.9,
     specialty: ["Vedic Astrology", "Kundli Reading", "Gemstone Astrology"],
     image: "https://i.ibb.co/SR6n3Sd/astro1.jpg",
-    skills: ["Oracle", "Healing", "Tarot Reading"],
+    skills: ["Numerology", "Gemstone Consultation", "Palmistry"],
   },
   {
     id: 2,
@@ -34,7 +37,7 @@ const astrologers: Astrologer[] = [
   },
 ];
 
-export default function Astrologers() {
+export default function Astrologers({ onNavigate }: AstrologerPageProps) {
   const [selectedId, setSelectedId] = useState<number | null>(null);
 
   return (
@@ -50,9 +53,16 @@ export default function Astrologers() {
         {astrologers.map((astro) => (
           <div key={astro.id}>
             <AstrologerCard
-              {...astro}
+              name={astro.name}
+              experience={astro.experience}
+              rating={astro.rating}
+              skills={astro.skills}
+              image={astro.image}
               onView={() => setSelectedId(astro.id)}
-              onReach={() => alert("Initiate Chat / Call Feature")}
+              onReach={() => {
+                alert(`You have selected ${astro.name}`);
+                onNavigate("booking");
+              }}
             />
           </div>
         ))}
