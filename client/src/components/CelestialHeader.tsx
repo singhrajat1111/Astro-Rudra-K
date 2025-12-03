@@ -3,7 +3,15 @@ import { motion } from "motion/react";
 import { Menu, X, Sparkles } from "lucide-react";
 import NebulaGhostButton from "./NebulaGhostButton";
 
-export default function CelestialHeader({ currentPage, onNavigate }) {
+interface CelestialHeaderProps {
+  currentPage: string;
+  onNavigate: (page: string) => void;
+}
+
+export default function CelestialHeader({
+  currentPage,
+  onNavigate
+}: CelestialHeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navItems = [
@@ -60,7 +68,7 @@ export default function CelestialHeader({ currentPage, onNavigate }) {
           {/* CTA Button - Desktop */}
           <div className="hidden md:block">
             <NebulaGhostButton onClick={() => onNavigate("booking")}>
-              Book Reading
+              Login/Signup
             </NebulaGhostButton>
           </div>
 
@@ -91,8 +99,8 @@ export default function CelestialHeader({ currentPage, onNavigate }) {
                   }}
                   className={`
                     text-left px-4 py-2 rounded-xl transition-colors duration-300
-                    ${currentPage === item.id 
-                      ? 'text-[#FFD79A] bg-[rgba(255,215,154,0.1)]' 
+                    ${currentPage === item.id
+                      ? 'text-[#FFD79A] bg-[rgba(255,215,154,0.1)]'
                       : 'text-[rgba(255,255,255,0.7)] hover:bg-[rgba(255,255,255,0.05)]'}
                   `}
                   style={{ fontFamily: "'Space Grotesk', sans-serif" }}

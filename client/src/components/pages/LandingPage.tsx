@@ -4,7 +4,6 @@ import CosmicCapsuleCard from "../CosmicCapsuleCard";
 import EnergyBurstButton from "../EnergyBurstButton";
 import NebulaGhostButton from "../NebulaGhostButton";
 import TestimonialGlassTile from "../TestimonialGlassTile";
-import Astrologers from "./AstrologerPage";
 
 interface LandingPageProps {
   onNavigate: (path: string) => void; 
