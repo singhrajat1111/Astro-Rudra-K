@@ -2,8 +2,10 @@ import { motion } from "motion/react";
 import CosmicCapsuleCard from "../CosmicCapsuleCard";
 import EnergyBurstButton from "../EnergyBurstButton";
 import { Sparkles } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
-export default function ServicesPage({ onNavigate }) {
+export default function ServicesPage() {
+  const navigate = useNavigate();
   const services = [
     {
       icon: "🌟",
@@ -244,7 +246,7 @@ export default function ServicesPage({ onNavigate }) {
             <p className="text-lg text-[rgba(255,255,255,0.8)] mb-10 max-w-2xl mx-auto">
               Book your personalized session and receive cosmic guidance tailored to your unique journey
             </p>
-            <EnergyBurstButton onClick={() => onNavigate("booking")}>
+            <EnergyBurstButton onClick={() => navigate("/booking")}>
               <Sparkles className="w-5 h-5" />
               Book Consultation Now
             </EnergyBurstButton>

@@ -1,0 +1,311 @@
+{
+  "tech_stack": [
+    "TypeScript",
+    "Node.js",
+    "Express",
+    "React",
+    "Vite"
+  ],
+  "features": [
+    {
+      "name": "Generate Kundli",
+      "description": "Generate a full Vedic Kundli (birth chart) including ascendant, planetary positions, houses, nakshatras, panchang, dasha, divisional charts, dosha, and optional matching metadata.",
+      "files": [
+        "server/api/kundli.route.ts",
+        "server/astro-engine/KundliEngine.ts",
+        "server/astro-engine/astronomy/AstronomyWrapper.ts"
+      ],
+      "api_doc": {
+        "openapi": "3.0.0",
+        "info": {
+          "title": "Kundli API",
+          "version": "1.0.0"
+        },
+        "paths": {
+          "/api/kundli": {
+            "post": {
+              "summary": "Generate Kundli",
+              "description": "Generate a detailed Vedic Kundli for a given birth date/time and location.",
+              "requestBody": {
+                "required": true,
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "date": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "ISO string for birth date/time in UTC or local time."
+                        },
+                        "lat": {
+                          "type": "number",
+                          "description": "Latitude in decimal degrees."
+                        },
+                        "lon": {
+                          "type": "number",
+                          "description": "Longitude in decimal degrees."
+                        },
+                        "girlMoonLongitude": {
+                          "type": "number",
+                          "description": "Optional moon longitude of partner for matching."
+                        }
+                      },
+                      "required": [
+                        "date",
+                        "lat",
+                        "lon"
+                      ]
+                    }
+                  }
+                }
+              },
+              "responses": {
+                "200": {
+                  "description": "Kundli generated successfully.",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object"
+                      }
+                    }
+                  }
+                },
+                "400": {
+                  "description": "Validation error for required fields."
+                },
+                "500": {
+                  "description": "Internal server error."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Match Compatibility",
+      "description": "Calculate compatibility score and details between two Moon longitudes for horoscope matching.",
+      "files": [
+        "server/api/match.route.ts",
+        "server/astro-engine/matching/Matching.ts"
+      ],
+      "api_doc": {
+        "openapi": "3.0.0",
+        "info": {
+          "title": "Matching API",
+          "version": "1.0.0"
+        },
+        "paths": {
+          "/api/match": {
+            "post": {
+              "summary": "Calculate horoscope matching",
+              "requestBody": {
+                "required": true,
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "boyMoonLong": {
+                          "type": "number",
+                          "description": "Moon longitude of boy in degrees."
+                        },
+                        "girlMoonLong": {
+                          "type": "number",
+                          "description": "Moon longitude of girl in degrees."
+                        }
+                      },
+                      "required": [
+                        "boyMoonLong",
+                        "girlMoonLong"
+                      ]
+                    }
+                  }
+                }
+              },
+              "responses": {
+                "200": {
+                  "description": "Matching result.",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object"
+                      }
+                    }
+                  }
+                },
+                "400": {
+                  "description": "Missing moon longitudes."
+                },
+                "500": {
+                  "description": "Internal server error."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Panchang Calculation",
+      "description": "Compute daily Panchang details (tithi, nakshatra, yoga, etc.) for a given date and location.",
+      "files": [
+        "server/api/panchang.route.ts",
+        "server/astro-engine/panchang/Panchang.ts"
+      ],
+      "api_doc": {
+        "openapi": "3.0.0",
+        "info": {
+          "title": "Panchang API",
+          "version": "1.0.0"
+        },
+        "paths": {
+          "/api/panchang": {
+            "post": {
+              "summary": "Calculate Panchang",
+              "requestBody": {
+                "required": true,
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "date": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "lat": {
+                          "type": "number"
+                        },
+                        "lon": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "date",
+                        "lat",
+                        "lon"
+                      ]
+                    }
+                  }
+                }
+              },
+              "responses": {
+                "200": {
+                  "description": "Panchang result."
+                },
+                "400": {
+                  "description": "Missing date or location."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Vimshottari Dasha Calculation",
+      "description": "Calculate Vimshottari Dasha periods from Moon longitude and date.",
+      "files": [
+        "server/api/dasha.route.ts",
+        "server/astro-engine/dasha/Vimshottari.ts"
+      ],
+      "api_doc": {
+        "openapi": "3.0.0",
+        "info": {
+          "title": "Dasha API",
+          "version": "1.0.0"
+        },
+        "paths": {
+          "/api/dasha": {
+            "post": {
+              "summary": "Calculate Vimshottari Dasha",
+              "requestBody": {
+                "required": true,
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "moonLongitude": {
+                          "type": "number"
+                        },
+                        "date": {
+                          "type": "string",
+                          "format": "date-time"
+                        }
+                      },
+                      "required": [
+                        "moonLongitude",
+                        "date"
+                      ]
+                    }
+                  }
+                }
+              },
+              "responses": {
+                "200": {
+                  "description": "Dasha result."
+                },
+                "400": {
+                  "description": "Missing moonLongitude or date."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Daily Horoscope",
+      "description": "Return simple static daily horoscope messages for a zodiac sign.",
+      "files": [
+        "server/api/horoscope.route.ts"
+      ],
+      "api_doc": {
+        "openapi": "3.0.0",
+        "info": {
+          "title": "Horoscope API",
+          "version": "1.0.0"
+        },
+        "paths": {
+          "/api/horoscope": {
+            "post": {
+              "summary": "Get daily horoscope",
+              "requestBody": {
+                "required": true,
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "sign": {
+                          "type": "string",
+                          "description": "Zodiac sign name, e.g. Aries, Taurus, etc."
+                        }
+                      },
+                      "required": [
+                        "sign"
+                      ]
+                    }
+                  }
+                }
+              },
+              "responses": {
+                "200": {
+                  "description": "Horoscope generated."
+                },
+                "400": {
+                  "description": "Missing sign."
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}
+
+

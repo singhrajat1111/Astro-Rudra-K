@@ -1,8 +1,10 @@
 import { motion } from "motion/react";
 import { Award, BookOpen, Globe, Star, Sparkles, TrendingUp, Users } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import EnergyBurstButton from "../EnergyBurstButton";
 
-export default function AboutPage({ onNavigate }) {
+export default function AboutPage() {
+  const navigate = useNavigate();
   const achievements = [
     { icon: <Award className="w-6 h-6" />, text: "Master's in Vedic Astrology", color: "#FFD79A" },
     { icon: <Users className="w-6 h-6" />, text: "10,000+ Consultations", color: "#6C33FF" },
@@ -227,7 +229,7 @@ export default function AboutPage({ onNavigate }) {
             <p className="text-lg text-[rgba(255,255,255,0.8)] mb-8 max-w-2xl mx-auto">
               Begin your journey to cosmic clarity with a personalized consultation
             </p>
-            <EnergyBurstButton onClick={() => onNavigate("booking")}>
+            <EnergyBurstButton onClick={() => navigate("/booking")}>
               <Sparkles className="w-5 h-5" />
               Book Consultation
             </EnergyBurstButton>

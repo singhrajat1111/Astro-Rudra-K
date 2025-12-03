@@ -47,7 +47,7 @@ export const loginWithOtp = async (req, res) => {
             return res.json({
                 message: "OTP sent successfully",
                 email: email,
-                userExists: !!user,
+                userExists: !user,
             });
         }
 

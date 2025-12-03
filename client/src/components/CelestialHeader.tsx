@@ -2,25 +2,23 @@ import { useState } from "react";
 import { motion } from "motion/react";
 import { Menu, X, Sparkles } from "lucide-react";
 import NebulaGhostButton from "./NebulaGhostButton";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
-interface CelestialHeaderProps {
-  currentPage: string;
-  onNavigate: (page: string) => void;
-}
-
-export default function CelestialHeader({
-  currentPage,
-  onNavigate
-}: CelestialHeaderProps) {
+export default function CelestialHeader() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const currentPath = location.pathname;
+
   const navItems = [
-    { id: "home", label: "Home" },
-    { id: "about", label: "About" },
-    { id: "services", label: "Services" },
-    { id: "astrologers", label: "Astrologers" },
-    { id: "booking", label: "Book Consultation" },
-    { id: "contact", label: "Contact" },
+    { path: "/", label: "Home" },
+    { path: "/about", label: "About" },
+    { path: "/services", label: "Services" },
+    { path: "/astrologers", label: "Astrologers" },
+    { path: "/booking", label: "Book Consultation" },
+    { path: "/contact", label: "Contact" },
   ];
 
   return (
@@ -32,47 +30,58 @@ export default function CelestialHeader({
         className="relative rounded-full bg-[rgba(11,11,14,0.8)] glass-blur border border-[rgba(255,255,255,0.1)] px-6 py-3"
       >
         <div className="flex items-center justify-between">
+
           {/* Logo */}
-          <div className="flex items-center gap-3 cursor-pointer" onClick={() => onNavigate("home")}>
+          <Link
+            to="/"
+            className="flex items-center gap-3 cursor-pointer"
+          >
             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#6C33FF] to-[#4EA3FF] flex items-center justify-center">
               <Sparkles className="w-5 h-5 text-[#FFD79A]" />
             </div>
-            <span className="text-xl text-[#FFD79A]" style={{ fontFamily: "'Cinzel Decorative', serif" }}>
+            <span
+              className="text-xl text-[#FFD79A]"
+              style={{ fontFamily: "'Cinzel Decorative', serif" }}
+            >
               Astro Rudra K
             </span>
-          </div>
+          </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8">
             {navItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => onNavigate(item.id)}
+              <Link
+                key={item.path}
+                to={item.path}
                 className={`
                   text-sm transition-colors duration-300 relative
-                  ${currentPage === item.id ? 'text-[#FFD79A]' : 'text-[rgba(255,255,255,0.7)] hover:text-white'}
+                  ${currentPath === item.path
+                    ? "text-[#FFD79A]"
+                    : "text-[rgba(255,255,255,0.7)] hover:text-white"}
                 `}
                 style={{ fontFamily: "'Space Grotesk', sans-serif" }}
               >
                 {item.label}
-                {currentPage === item.id && (
+
+                {currentPath === item.path && (
                   <motion.div
                     layoutId="activeNav"
-                    className="absolute -bottom-2 left-0 right-0 h-0.5 bg-gradient-to-r from-[#6C33FF] via-[#4EA3FF] to-[#FFD79A]"
+                    className="absolute -bottom-2 left-0 right-0 h-0.5 
+                    bg-gradient-to-r from-[#6C33FF] via-[#4EA3FF] to-[#FFD79A]"
                   />
                 )}
-              </button>
+              </Link>
             ))}
           </nav>
 
-          {/* CTA Button - Desktop */}
+          {/* CTA Button (Login) */}
           <div className="hidden md:block">
-            <NebulaGhostButton onClick={() => onNavigate("booking")}>
+            <NebulaGhostButton onClick={() => navigate("/login")}>
               Login/Signup
             </NebulaGhostButton>
           </div>
 
-          {/* Mobile Menu Button */}
+          {/* Mobile Menu Toggle */}
           <button
             className="md:hidden text-white p-2"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -91,22 +100,20 @@ export default function CelestialHeader({
           >
             <div className="flex flex-col gap-4">
               {navItems.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => {
-                    onNavigate(item.id);
-                    setMobileMenuOpen(false);
-                  }}
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  onClick={() => setMobileMenuOpen(false)}
                   className={`
                     text-left px-4 py-2 rounded-xl transition-colors duration-300
-                    ${currentPage === item.id
-                      ? 'text-[#FFD79A] bg-[rgba(255,215,154,0.1)]'
-                      : 'text-[rgba(255,255,255,0.7)] hover:bg-[rgba(255,255,255,0.05)]'}
+                    ${currentPath === item.path
+                      ? "text-[#FFD79A] bg-[rgba(255,215,154,0.1)]"
+                      : "text-[rgba(255,255,255,0.7)] hover:bg-[rgba(255,255,255,0.05)]"}
                   `}
                   style={{ fontFamily: "'Space Grotesk', sans-serif" }}
                 >
                   {item.label}
-                </button>
+                </Link>
               ))}
             </div>
           </motion.nav>

@@ -1,0 +1,52 @@
+[
+  {
+    "id": "TC001",
+    "title": "generate_kundli_with_valid_input",
+    "description": "Test the /api/kundli POST endpoint with valid birth date/time, latitude, and longitude to verify successful generation of a detailed Vedic Kundli chart including ascendant, planetary positions, houses, nakshatras, panchang, dasha, divisional charts, dosha, and optional matching metadata."
+  },
+  {
+    "id": "TC002",
+    "title": "generate_kundli_with_missing_required_fields",
+    "description": "Test the /api/kundli POST endpoint with missing required fields such as date, lat, or lon to verify that the API returns a 400 validation error."
+  },
+  {
+    "id": "TC003",
+    "title": "calculate_compatibility_with_valid_moon_longitudes",
+    "description": "Test the /api/match POST endpoint with valid boyMoonLong and girlMoonLong values to verify correct calculation of horoscope compatibility score and details based on Vedic astrology principles."
+  },
+  {
+    "id": "TC004",
+    "title": "calculate_compatibility_with_missing_moon_longitudes",
+    "description": "Test the /api/match POST endpoint with missing boyMoonLong or girlMoonLong to verify that the API returns a 400 error indicating missing moon longitudes."
+  },
+  {
+    "id": "TC005",
+    "title": "calculate_panchang_with_valid_date_and_location",
+    "description": "Test the /api/panchang POST endpoint with valid date, latitude, and longitude to verify correct computation of daily Panchang details such as tithi, nakshatra, and yoga."
+  },
+  {
+    "id": "TC006",
+    "title": "calculate_panchang_with_missing_date_or_location",
+    "description": "Test the /api/panchang POST endpoint with missing date or location fields to verify that the API returns a 400 validation error."
+  },
+  {
+    "id": "TC007",
+    "title": "calculate_vimshottari_dasha_with_valid_input",
+    "description": "Test the /api/dasha POST endpoint with valid moonLongitude and date to verify correct calculation of Vimshottari Dasha periods."
+  },
+  {
+    "id": "TC008",
+    "title": "calculate_vimshottari_dasha_with_missing_fields",
+    "description": "Test the /api/dasha POST endpoint with missing moonLongitude or date to verify that the API returns a 400 validation error."
+  },
+  {
+    "id": "TC009",
+    "title": "get_daily_horoscope_with_valid_sign",
+    "description": "Test the /api/horoscope POST endpoint with a valid zodiac sign to verify that the API returns the correct daily horoscope message."
+  },
+  {
+    "id": "TC010",
+    "title": "get_daily_horoscope_with_missing_sign",
+    "description": "Test the /api/horoscope POST endpoint with missing zodiac sign to verify that the API returns a 400 validation error."
+  }
+]

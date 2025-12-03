@@ -24,6 +24,7 @@ router.post("/", (req, res) => {
         return res.json({ success: true, data: result });
 
     } catch (err: any) {
+        console.log(err)
         return res.status(500).json({ error: err.message });
     }
 });

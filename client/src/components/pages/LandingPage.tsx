@@ -1,15 +1,15 @@
 import { motion } from "motion/react";
 import { Sparkles, Stars, Compass, TrendingUp, Heart, Home as HomeIcon, Award, Users, Calendar } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+
 import CosmicCapsuleCard from "../CosmicCapsuleCard";
 import EnergyBurstButton from "../EnergyBurstButton";
 import NebulaGhostButton from "../NebulaGhostButton";
 import TestimonialGlassTile from "../TestimonialGlassTile";
 
-interface LandingPageProps {
-  onNavigate: (path: string) => void; 
-}
+export default function LandingPage() {
+  const navigate = useNavigate();
 
-export default function LandingPage({ onNavigate }: LandingPageProps) {
   const services = [
     {
       icon: "🌟",
@@ -111,9 +111,10 @@ export default function LandingPage({ onNavigate }: LandingPageProps) {
         </div>
       </div>
 
-      {/* Hero Section - Celestial Gateway */}
+      {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center px-6 md:px-[120px] pt-32 pb-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center max-w-7xl mx-auto w-full">
+          
           {/* Left Content */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
@@ -139,23 +140,24 @@ export default function LandingPage({ onNavigate }: LandingPageProps) {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4">
-              <EnergyBurstButton onClick={() => onNavigate("astrologers")}>
+              <EnergyBurstButton onClick={() => navigate("/astrologers")}>
                 <Calendar className="w-5 h-5" />
                 Book Consultation
               </EnergyBurstButton>
-              <NebulaGhostButton onClick={() => onNavigate("kundli")}>
+
+              <NebulaGhostButton onClick={() => navigate("/kundli")}>
                 <Sparkles className="w-5 h-5" />
                 Try Astro Reading
               </NebulaGhostButton>
             </div>
 
-            {/* Floating Planet Glyphs */}
+            {/* Floating Glyph */}
             <div className="hidden lg:block absolute top-20 right-0 orbital-float">
               <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#6C33FF] to-[#4EA3FF] opacity-30 blur-sm" />
             </div>
           </motion.div>
 
-          {/* Right - Glowing Glass Orb with Astrologer Photo */}
+          {/* Right Orb Image */}
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -163,7 +165,6 @@ export default function LandingPage({ onNavigate }: LandingPageProps) {
             className="relative orbital-float"
           >
             <div className="relative w-full max-w-[500px] mx-auto aspect-square">
-              {/* Rotating Mandala Background */}
               <div className="absolute inset-0 mandala-rotate opacity-20">
                 <svg viewBox="0 0 400 400" className="w-full h-full">
                   <circle cx="200" cy="200" r="180" fill="none" stroke="#FFD79A" strokeWidth="1" />
@@ -185,20 +186,15 @@ export default function LandingPage({ onNavigate }: LandingPageProps) {
                 </svg>
               </div>
 
-              {/* Glass Orb */}
               <div className="absolute inset-8 rounded-full bg-gradient-to-br from-[rgba(108,51,255,0.3)] via-[rgba(78,163,255,0.2)] to-[rgba(255,215,154,0.3)] glass-blur border-2 border-[rgba(255,215,154,0.4)] overflow-hidden golden-glow">
-                {/* Placeholder for astrologer image - using gradient instead */}
                 <div className="w-full h-full bg-gradient-to-br from-[#1a1a2e] via-[#16213e] to-[#0f3460] flex items-center justify-center">
                   <div className="text-8xl opacity-50">🧘‍♂️</div>
                 </div>
               </div>
 
-              {/* Floating Zodiac Symbols */}
+              {/* Floating Symbols */}
               {["♈", "♉", "♊", "♋", "♌", "♍", "♎", "♏"].map((symbol, i) => {
                 const angle = (i * 45 * Math.PI) / 180;
-                const x = 50 + Math.cos(angle) * 50;
-                const y = 50 + Math.sin(angle) * 50;
-                
                 return (
                   <motion.div
                     key={i}
@@ -207,9 +203,9 @@ export default function LandingPage({ onNavigate }: LandingPageProps) {
                     transition={{ delay: 0.5 + i * 0.1, duration: 0.5 }}
                     className="absolute w-10 h-10 rounded-full bg-[rgba(255,255,255,0.05)] glass-blur border border-[rgba(255,215,154,0.3)] flex items-center justify-center text-[#FFD79A]"
                     style={{
-                      left: `${x}%`,
-                      top: `${y}%`,
-                      transform: 'translate(-50%, -50%)',
+                      left: `${50 + Math.cos(angle) * 50}%`,
+                      top: `${50 + Math.sin(angle) * 50}%`,
+                      transform: "translate(-50%, -50%)",
                       fontFamily: "'Cinzel Decorative', serif"
                     }}
                   >
@@ -221,7 +217,7 @@ export default function LandingPage({ onNavigate }: LandingPageProps) {
           </motion.div>
         </div>
 
-        {/* Decorative Nebula Elements */}
+        {/* Background Glow */}
         <div className="absolute top-1/4 left-0 w-96 h-96 rounded-full bg-gradient-to-br from-[rgba(108,51,255,0.1)] to-transparent blur-3xl pointer-events-none" />
         <div className="absolute bottom-1/4 right-0 w-96 h-96 rounded-full bg-gradient-to-br from-[rgba(78,163,255,0.1)] to-transparent blur-3xl pointer-events-none" />
       </section>
@@ -256,7 +252,7 @@ export default function LandingPage({ onNavigate }: LandingPageProps) {
         </div>
       </section>
 
-      {/* Why Choose Us Section */}
+      {/* Why Choose Us */}
       <section className="relative px-6 md:px-[120px] py-32">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -281,20 +277,15 @@ export default function LandingPage({ onNavigate }: LandingPageProps) {
               className="relative group"
             >
               <div className="relative rounded-3xl bg-gradient-to-br from-[rgba(108,51,255,0.1)] to-[rgba(78,163,255,0.1)] glass-blur border border-[rgba(255,215,154,0.3)] p-8 text-center h-full overflow-hidden transition-all duration-300 hover:border-[rgba(255,215,154,0.6)] hover:scale-105">
-                {/* Icon */}
                 <div className="inline-flex w-20 h-20 rounded-2xl bg-gradient-to-br from-[#6C33FF] to-[#4EA3FF] items-center justify-center mb-6 text-[#FFD79A] group-hover:scale-110 transition-transform duration-300">
                   {pillar.icon}
                 </div>
 
-                {/* Content */}
                 <h3 className="text-2xl mb-4 text-[#FFD79A]" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
                   {pillar.title}
                 </h3>
-                <p className="text-[rgba(255,255,255,0.7)]">
-                  {pillar.description}
-                </p>
+                <p className="text-[rgba(255,255,255,0.7)]">{pillar.description}</p>
 
-                {/* Glow Effect */}
                 <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-[rgba(108,51,255,0.2)] to-[rgba(78,163,255,0.2)] opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-xl pointer-events-none" />
               </div>
             </motion.div>
@@ -302,7 +293,7 @@ export default function LandingPage({ onNavigate }: LandingPageProps) {
         </div>
       </section>
 
-      {/* Testimonials Section */}
+      {/* Testimonials */}
       <section className="relative px-6 md:px-[120px] py-32">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -342,7 +333,6 @@ export default function LandingPage({ onNavigate }: LandingPageProps) {
           viewport={{ once: true }}
           className="relative rounded-[32px] bg-gradient-to-br from-[rgba(108,51,255,0.2)] via-[rgba(78,163,255,0.2)] to-[rgba(255,215,154,0.2)] glass-blur border border-[rgba(255,215,154,0.4)] p-12 md:p-16 text-center overflow-hidden max-w-5xl mx-auto"
         >
-          {/* Background Pattern */}
           <div className="absolute inset-0 opacity-10">
             <svg className="w-full h-full" viewBox="0 0 400 200">
               <pattern id="cta-pattern" x="0" y="0" width="50" height="50" patternUnits="userSpaceOnUse">
@@ -359,13 +349,12 @@ export default function LandingPage({ onNavigate }: LandingPageProps) {
             <p className="text-lg text-[rgba(255,255,255,0.8)] mb-10 max-w-2xl mx-auto">
               Book a personalized consultation and discover what the stars have aligned for you
             </p>
-            <EnergyBurstButton onClick={() => onNavigate("booking")}>
+            <EnergyBurstButton onClick={() => navigate("/booking")}>
               <Sparkles className="w-5 h-5" />
               Book Your Reading Now
             </EnergyBurstButton>
           </div>
 
-          {/* Decorative Orbs */}
           <div className="absolute top-10 left-10 w-20 h-20 rounded-full bg-gradient-to-br from-[#6C33FF] to-[#4EA3FF] opacity-20 blur-2xl" />
           <div className="absolute bottom-10 right-10 w-32 h-32 rounded-full bg-gradient-to-br from-[#FFD79A] to-[#D68A28] opacity-20 blur-2xl" />
         </motion.div>

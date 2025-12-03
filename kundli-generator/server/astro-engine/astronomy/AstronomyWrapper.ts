@@ -1,12 +1,12 @@
- import * as Astronomy from "astronomy-engine";
-
-const MakeTime = Astronomy.MakeTime;
-const GeoVector = Astronomy.GeoVector;
-const Ecliptic = Astronomy.Ecliptic;
-const SiderealTime = Astronomy.SiderealTime;
-const Body = Astronomy.Body;
-const Observer = Astronomy.Observer;
-const SearchRiseSet = Astronomy.SearchRiseSet;
+import {
+    MakeTime,
+    GeoVector,
+    Ecliptic,
+    SiderealTime,
+    Body,
+    Observer,
+    SearchRiseSet
+} from "astronomy-engine";
 
 /**
  * Wrapper around astronomy-engine to support

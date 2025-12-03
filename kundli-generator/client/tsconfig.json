@@ -24,5 +24,5 @@
     "experimentalSpecifierResolution": "node"
   },
 
-  "include": ["server.ts", "src/**/*"]
+  "include": ["server/server.ts", "src/**/*", "server/core", "server/api", "server/temp/KundliTestPage.tsx"]
 }

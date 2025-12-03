@@ -1,10 +1,6 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import AstrologerCard from "../ui/AstrologerCard";
-
-interface AstrologerPageProps {
-  onNavigate: (page: string) => void;
-}
-
 
 interface Astrologer {
   id: number;
@@ -37,8 +33,9 @@ const astrologers: Astrologer[] = [
   },
 ];
 
-export default function Astrologers({ onNavigate }: AstrologerPageProps) {
+export default function Astrologers() {
   const [selectedId, setSelectedId] = useState<number | null>(null);
+  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-black text-white py-20 px-4">
@@ -59,9 +56,9 @@ export default function Astrologers({ onNavigate }: AstrologerPageProps) {
               skills={astro.skills}
               image={astro.image}
               onView={() => setSelectedId(astro.id)}
-              onReach={() => {
+                onReach={() => {
                 alert(`You have selected ${astro.name}`);
-                onNavigate("booking");
+                navigate("/booking");
               }}
             />
           </div>

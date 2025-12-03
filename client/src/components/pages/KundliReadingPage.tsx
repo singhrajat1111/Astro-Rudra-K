@@ -1,10 +1,12 @@
 import { motion } from "motion/react";
 import { Sparkles, TrendingUp, Heart, Briefcase, Home, Shield } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import AstroOrbChart from "../AstroOrbChart";
 import CosmicCapsuleCard from "../CosmicCapsuleCard";
 import EnergyBurstButton from "../EnergyBurstButton";
 
-export default function KundliReadingPage({ onNavigate }) {
+export default function KundliReadingPage() {
+  const navigate = useNavigate();
   const dashaTimeline = [
     { planet: "Venus", period: "2020-2023", status: "completed", color: "#4EA3FF" },
     { planet: "Sun", period: "2023-2024", status: "current", color: "#FFD79A" },
@@ -372,7 +374,7 @@ export default function KundliReadingPage({ onNavigate }) {
             <p className="text-lg text-[rgba(255,255,255,0.8)] mb-10 max-w-2xl mx-auto">
               This is a sample reading. Book a consultation to receive your complete birth chart analysis with detailed predictions and personalized remedies.
             </p>
-            <EnergyBurstButton onClick={() => onNavigate("booking")}>
+            <EnergyBurstButton onClick={() => navigate("/booking")}>
               <Sparkles className="w-5 h-5" />
               Book Your Reading Now
             </EnergyBurstButton>

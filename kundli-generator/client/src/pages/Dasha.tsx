@@ -71,9 +71,8 @@ const Dasha: React.FC = () => {
   return (
     <Layout>
       <div className="flex flex-col items-center text-white">
-
         {/* Page Title */}
-        <h1 className="text-4xl font-bold mb-6 bg-gradient-to-r from-purple-400 to-blue-400 text-transparent bg-clip-text">
+        <h1 className="text-4xl font-bold mb-6 bg-linear-to-r from-purple-400 to-blue-400 text-transparent bg-clip-text">
           🕉 Vimshottari Dasha
         </h1>
 
@@ -85,7 +84,9 @@ const Dasha: React.FC = () => {
         >
           {/* Date */}
           <div>
-            <label className="block text-sm text-slate-300 mb-1">Birth Date</label>
+            <label className="block text-sm text-slate-300 mb-1">
+              Birth Date
+            </label>
             <input
               type="date"
               name="date"
@@ -97,7 +98,9 @@ const Dasha: React.FC = () => {
 
           {/* Time */}
           <div>
-            <label className="block text-sm text-slate-300 mb-1">Birth Time</label>
+            <label className="block text-sm text-slate-300 mb-1">
+              Birth Time
+            </label>
             <input
               type="time"
               name="time"
@@ -109,7 +112,9 @@ const Dasha: React.FC = () => {
 
           {/* Timezone */}
           <div>
-            <label className="block text-sm text-slate-300 mb-1">Timezone</label>
+            <label className="block text-sm text-slate-300 mb-1">
+              Timezone
+            </label>
             <input
               type="number"
               name="timezone"
@@ -124,7 +129,7 @@ const Dasha: React.FC = () => {
           <div className="flex items-end">
             <button
               type="submit"
-              className="w-full py-3 bg-gradient-to-r from-indigo-500 to-blue-600 rounded-xl 
+              className="w-full py-3 bg-linear-to-r from-indigo-500 to-blue-600 rounded-xl 
                          text-lg font-semibold hover:opacity-90"
             >
               {loading ? "Calculating..." : "Calculate Dasha"}
@@ -147,13 +152,14 @@ const Dasha: React.FC = () => {
                              transition-all shadow-md"
                 >
                   <div className="flex justify-between items-center">
-
                     {/* Planet Name */}
                     <div>
                       <span className="text-xl font-semibold text-blue-300">
                         {dasha.planet}
                       </span>
-                      <span className="text-sm text-slate-400 ml-3">Mahadasha</span>
+                      <span className="text-sm text-slate-400 ml-3">
+                        Mahadasha
+                      </span>
                     </div>
 
                     {/* Date Range */}
@@ -166,7 +172,6 @@ const Dasha: React.FC = () => {
                         {new Date(dasha.end).toLocaleDateString()}
                       </div>
                     </div>
-
                   </div>
                 </div>
               ))}

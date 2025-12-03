@@ -9,14 +9,24 @@ export default function NakshatraCard({ planet, info }: any) {
         {planet} Nakshatra — (Pada {info.pada})
       </h3>
 
-      <p><strong>Name:</strong> {n.name} ({n.sanskrit})</p>
-      <p><strong>Ruler:</strong> {n.ruler}</p>
-      <p><strong>Deity:</strong> {n.deity}</p>
-      <p><strong>Symbol:</strong> {n.symbol}</p>
-      <p><strong>Nature:</strong> {n.nature}</p>
+      <p>
+        <strong>Name:</strong> {n.name} ({n.sanskrit})
+      </p>
+      <p>
+        <strong>Ruler:</strong> {n.ruler}
+      </p>
+      <p>
+        <strong>Deity:</strong> {n.deity}
+      </p>
+      <p>
+        <strong>Symbol:</strong> {n.symbol}
+      </p>
+      <p>
+        <strong>Nature:</strong> {n.nature}
+      </p>
 
       <p className="mt-3 text-sm text-gray-400">
-        Index: {n.index}  
+        Index: {n.index}
         <br />
         Degrees Remaining: {n.endDegree - n.startDegree}°
       </p>

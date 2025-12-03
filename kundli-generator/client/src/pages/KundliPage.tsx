@@ -183,6 +183,7 @@ export default function KundliPage() {
         lat: form.lat,
         lon: form.lon,
       };
+      console.log(payload);
 
       const res = await axios.post<ApiResponse<KundliResponse>>(
         "http://localhost:5000/api/kundli",

@@ -1,0 +1,2 @@
+this project is used to generate a kundli as the user has to input his name, gender, place of birth, time of birth
+the server then responds with the json data of the kundli of the user
