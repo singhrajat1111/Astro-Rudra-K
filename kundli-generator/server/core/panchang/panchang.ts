@@ -1,138 +1,137 @@
-import * as Astronomy from "astronomy-engine";
+import { AstronomyWrapper } from "../../astro-engine/astronomy/AstronomyWrapper";
 
-// @ts-ignore
-const Observer = Astronomy.Observer || Astronomy.default?.Observer;
-// @ts-ignore
-const SearchRiseSet = Astronomy.SearchRiseSet || Astronomy.default?.SearchRiseSet;
-// @ts-ignore
-const Body = Astronomy.Body || Astronomy.default?.Body;
-// @ts-ignore
-const SunPosition = Astronomy.SunPosition || Astronomy.default?.SunPosition;
-// @ts-ignore
-const EclipticGeoMoon = Astronomy.EclipticGeoMoon || Astronomy.default?.EclipticGeoMoon;
-
-export interface PanchangResult {
-    date: Date;
-    tithi: { index: number; name: string };
-    nakshatra: { index: number; name: string; pada: number };
-    yoga: { index: number; name: string };
-    karana: { index: number; name: string };
-    vara: string;
-    sunrise: string;
-    sunset: string;
-    rahuKaal: { start: string; end: string };
-    gulikaKaal: { start: string; end: string };
-    yamaganda: { start: string; end: string };
-    abhijit: { start: string; end: string };
+export interface PanchangData {
+  tithi: string;
+  paksha: "Shukla" | "Krishna";
+  nakshatra: string;
+  nakshatraPada: number;
+  yoga: string;
+  karana: string;
+  weekday: string;
+  sunrise: Date | null;
+  sunset: Date | null;
+  moonPhase: string;
 }
 
-// ---------------------- CONSTANT ARRAYS ----------------------
+export class Panchang {
+  private astronomy = AstronomyWrapper.getInstance();
 
-const TITHI_NAMES = [
-    "", "Pratipada", "Dvitiya", "Tritiya", "Chaturthi", "Panchami",
+  private TITHIS = [
+    "Pratipada", "Dwitiya", "Tritiya", "Chaturthi", "Panchami",
     "Shashthi", "Saptami", "Ashtami", "Navami", "Dashami",
-    "Ekadashi", "Dwadashi", "Trayodashi", "Chaturdashi", "Purnima / Amavasya",
-    "Pratipada (Krishna)", "Dvitiya", "Tritiya", "Chaturthi", "Panchami",
-    "Shashthi", "Saptami", "Ashtami", "Navami", "Dashami",
-    "Ekadashi", "Dwadashi", "Trayodashi", "Chaturdashi", "Amavasya"
-];
+    "Ekadashi", "Dwadashi", "Trayodashi", "Chaturdashi",
+    "Purnima / Amavasya"
+  ] as const;
 
-const NAKSHATRA_NAMES = [
-    "", "Ashwini", "Bharani", "Krittika", "Rohini", "Mrigashira",
+  private NAKSHATRAS = [
+    "Ashwini", "Bharani", "Krittika", "Rohini", "Mrigashira",
     "Ardra", "Punarvasu", "Pushya", "Ashlesha", "Magha",
-    "Purva Phalguni", "Uttara Phalguni", "Hasta", "Chitra", "Swati",
-    "Vishakha", "Anuradha", "Jyeshtha", "Mula", "Purva Ashadha",
-    "Uttara Ashadha", "Shravana", "Dhanishtha", "Shatabhisha", "Purva Bhadrapada",
-    "Uttara Bhadrapada", "Revati"
-];
+    "Purva Phalguni", "Uttara Phalguni", "Hasta", "Chitra",
+    "Swati", "Vishakha", "Anuradha", "Jyeshtha", "Mula",
+    "Purva Ashadha", "Uttara Ashadha", "Shravana", "Dhanishta",
+    "Shatabhisha", "Purva Bhadrapada", "Uttara Bhadrapada", "Revati"
+  ] as const;
 
-const YOGA_NAMES = [
-    "", "Vishkumbha", "Preeti", "Ayushman", "Saubhagya", "Shobhana",
+  private YOGAS = [
+    "Vishkumbha", "Preeti", "Ayushman", "Saubhagya", "Shobhana",
     "Atiganda", "Sukarma", "Dhriti", "Shoola", "Ganda",
     "Vriddhi", "Dhruva", "Vyaghata", "Harshana", "Vajra",
     "Siddhi", "Vyatipata", "Variyan", "Parigha", "Shiva",
     "Siddha", "Sadhya", "Shubha", "Shukla", "Brahma",
     "Indra", "Vaidhriti"
-];
+  ] as const;
 
-const KARANA_NAMES = [
-    "", "Bava", "Balava", "Kaulava", "Taitila", "Garaja",
-    "Vanija", "Vishti (Bhadra)", "Shakuni", "Chatushpada", "Naga", "Kimstughna"
-];
+  private KARANAS = [
+    "Bava", "Balava", "Kaulava", "Taitila", "Garaja",
+    "Vanija", "Vishti", "Shakuni", "Chatushpada", "Naga"
+  ] as const;
 
-const VARA_LORDS = [
-    "Sunday - Sun", "Monday - Moon", "Tuesday - Mars", "Wednesday - Mercury",
-    "Thursday - Jupiter", "Friday - Venus", "Saturday - Saturn"
-];
+  private getLongitudes(date: Date) {
+    const sun = this.astronomy.getPlanetPosition(date, "Sun").longitude;
+    const moon = this.astronomy.getPlanetPosition(date, "Moon").longitude;
+    return { sun, moon };
+  }
 
-const formatTime = (d?: Date | null): string =>
-    d ? d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "NA";
+  private getTithiData(date: Date) {
+    const { sun, moon } = this.getLongitudes(date);
+    const diff = (moon - sun + 360) % 360;
 
-// ------------------------------------------------------------
-//                    MAIN PANCHANG ENGINE
-// ------------------------------------------------------------
+    const tithiNum = Math.floor(diff / 12) + 1;
 
-export const calculatePanchang = (date: Date, lat: number, lon: number): PanchangResult => {
-    const observer = { latitude: lat, longitude: lon, height: 0 };
+    const paksha: "Shukla" | "Krishna" = tithiNum <= 15 ? "Shukla" : "Krishna";
 
-    // ----------- ✔ SUN & MOON longitudes (correct way) ----------
-    const sunLon = SunPosition(date).elon;
-    const moonLon = EclipticGeoMoon(date).lon;
-
-    // ---------------------- ✔ TITHI ----------------------
-    let diff = moonLon - sunLon;
-    if (diff < 0) diff += 360;
-    const tithiIndex = Math.floor(diff / 12) + 1;
-
-    // ------------------ ✔ NAKSHATRA ----------------------
-    const nakIndex = Math.floor(moonLon / (360 / 27)) + 1;
-    const pada = Math.floor(((moonLon % (360 / 27)) / (360 / 108))) + 1;
-
-    // ------------------- ✔ YOGA --------------------------
-    const yogaIndex = Math.floor(((sunLon + moonLon) % 360) / (360 / 27)) + 1;
-
-    // ------------------ ✔ KARANA -------------------------
-    const karanaIndex = Math.floor(diff / 6) + 1;
-
-    // ------------------ ✔ VARA ---------------------------
-    const vara = VARA_LORDS[date.getDay()];
-
-    // ---------------- ✔ SUNRISE / SUNSET -------------------
-    const sunrise = SearchRiseSet(Body.Sun, observer, +1, date, 1)?.date || null;
-    const sunset = SearchRiseSet(Body.Sun, observer, -1, date, 1)?.date || null;
-
-    // ---------------- ✔ RAHU KAAL -------------------------
-    const sunriseM = sunrise ? sunrise.getHours() * 60 + sunrise.getMinutes() : 360;
-    const sunsetM = sunset ? sunset.getHours() * 60 + sunset.getMinutes() : 1080;
-    const dayLength = (sunsetM - sunriseM) / 8;
-
-    const rahuOrder = [7, 1, 6, 4, 5, 3, 2];
-    const rahuStart = sunriseM + rahuOrder[date.getDay()] * dayLength;
-    const rahuEnd = rahuStart + dayLength;
-
-    // ---------------- ✔ ABHIJIT MUHURTA ---------------------
-    const midDay = (sunriseM + sunsetM) / 2;
-    const abhijitStart = midDay - 24;
-    const abhijitEnd = midDay + 24;
+    const index = (tithiNum - 1) % 15;
 
     return {
-        date,
-        tithi: { index: tithiIndex, name: TITHI_NAMES[tithiIndex] },
-        nakshatra: { index: nakIndex, name: NAKSHATRA_NAMES[nakIndex], pada },
-        yoga: { index: yogaIndex, name: YOGA_NAMES[yogaIndex] },
-        karana: { index: karanaIndex, name: KARANA_NAMES[karanaIndex] },
-        vara,
-        sunrise: formatTime(sunrise),
-        sunset: formatTime(sunset),
-        rahuKaal: {
-            start: formatTime(new Date(date.setHours(0, rahuStart))),
-            end: formatTime(new Date(date.setHours(0, rahuEnd)))
-        },
-        gulikaKaal: { start: "Coming Soon", end: "Coming Soon" },
-        yamaganda: { start: "Coming Soon", end: "Coming Soon" },
-        abhijit: {
-            start: formatTime(new Date(date.setHours(0, abhijitStart))),
-            end: formatTime(new Date(date.setHours(0, abhijitEnd)))
-        }
+      name: this.TITHIS[index],
+      paksha
     };
-};
+  }
+
+  private getNakshatraData(date: Date) {
+    const { moon } = this.getLongitudes(date);
+
+    const NAK_LEN = 360 / 27;        // 13°20'
+    const PADA_LEN = NAK_LEN / 4;    // 3°20'
+
+    const nakIndex = Math.floor(moon / NAK_LEN);
+    const nakshatra = this.NAKSHATRAS[nakIndex];
+
+    const degreesIntoNak = moon % NAK_LEN;
+    const pada = Math.floor(degreesIntoNak / PADA_LEN) + 1;
+
+    return { nakshatra, pada };
+  }
+
+  private getYogaData(date: Date) {
+    const { sun, moon } = this.getLongitudes(date);
+    const sum = (sun + moon) % 360;
+    return this.YOGAS[Math.floor(sum / (360 / 27))];
+  }
+
+  private getKaranaData(date: Date) {
+    const { sun, moon } = this.getLongitudes(date);
+    const diff = (moon - sun + 360) % 360;
+    return this.KARANAS[Math.floor(diff / 6) % this.KARANAS.length];
+  }
+
+  private getSunMoonEvents(date: Date, lat: number, lon: number) {
+    const rs = this.astronomy.getRiseSet(date, lat, lon);
+    return {
+      sunrise: rs.rise || null,
+      sunset: rs.set || null
+    };
+  }
+
+  public calculate(date: Date, lat: number, lon: number): PanchangData {
+    const tithiInfo = this.getTithiData(date);
+    const nak = this.getNakshatraData(date);
+    const yoga = this.getYogaData(date);
+    const karana = this.getKaranaData(date);
+    const events = this.getSunMoonEvents(date, lat, lon);
+
+    const weekday = [
+      "Sunday", "Monday", "Tuesday", "Wednesday",
+      "Thursday", "Friday", "Saturday"
+    ][date.getDay()];
+
+    const { sun, moon } = this.getLongitudes(date);
+    const moonPhase =
+      (moon - sun + 360) % 360 < 180
+        ? "Waxing (Shukla)"
+        : "Waning (Krishna)";
+
+    return {
+      tithi: tithiInfo.name,
+      paksha: tithiInfo.paksha,
+      nakshatra: nak.nakshatra,
+      nakshatraPada: nak.pada,
+      yoga,
+      karana,
+      weekday,
+      sunrise: events.sunrise,
+      sunset: events.sunset,
+      moonPhase
+    };
+  }
+}

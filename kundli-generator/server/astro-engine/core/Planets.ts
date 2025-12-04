@@ -1,6 +1,5 @@
-import * as Astronomy from "astronomy-engine";
-// @ts-ignore
-const Body = Astronomy.Body || Astronomy.default?.Body;
+import Astronomy from "astronomy-engine";
+const { Body } = Astronomy;
 
 export type ElementType = "fire" | "earth" | "air" | "water";
 

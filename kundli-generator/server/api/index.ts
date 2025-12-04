@@ -1,18 +1,19 @@
 import { Router } from "express";
 
-import kundliRouter from "./kundli.route";
-import matchRouter from "./match.route";
-import panchangRouter from "./panchang.route";
-import dashaRouter from "./dasha.route";
-import horoscopeRouter from "./horoscope.route";
+import kundliRouter from "./kundli.route.js";
+import panchangRouter from "./panchang.route.js";
+import dashaRouter from "./dasha.route.js";
+import matchRouter from "./match.route.js";
+import horoscopeRouter from "./horoscope.route.js";
 
 const api = Router();
 
-// REGISTER ALL ROUTES
+/* -------- Register All API Routes -------- */
+
 api.use("/kundli", kundliRouter);
-api.use("/match", matchRouter);
-api.use("/panchang", panchangRouter);   // ✔ correct one
+api.use("/panchang", panchangRouter);
 api.use("/dasha", dashaRouter);
+api.use("/match", matchRouter);
 api.use("/horoscope", horoscopeRouter);
 
 export default api;

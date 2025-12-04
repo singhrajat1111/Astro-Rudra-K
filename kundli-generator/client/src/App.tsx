@@ -1,13 +1,12 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-// Correct TSX pages
-import KundliPage from "./pages/KundliPage";
 import Transit from "./pages/TransitPage";
 import Dasha from "./pages/Dasha";
 import Panchang from "./pages/Panchang";
 import HoroscopePage from "./pages/HoroscopePage";
 import MatchingPage from "./pages/MatchingPage";
-// import TestKundliPage from "../../server/temp/KundliTestPage";
+import KundliPage from "./pages/KundliPage";
+
 
 export default function App() {
     return (

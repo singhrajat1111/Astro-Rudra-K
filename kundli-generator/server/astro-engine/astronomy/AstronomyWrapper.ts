@@ -1,17 +1,5 @@
-import {
-    MakeTime,
-    GeoVector,
-    Ecliptic,
-    SiderealTime,
-    Body,
-    Observer,
-    SearchRiseSet
-} from "astronomy-engine";
+import Astronomy from "astronomy-engine";
 
-/**
- * Wrapper around astronomy-engine to support
- * Vedic astrology computations using sidereal (Lahiri) zodiac.
- */
 export class AstronomyWrapper {
     private static instance: AstronomyWrapper;
 
@@ -24,87 +12,71 @@ export class AstronomyWrapper {
         return AstronomyWrapper.instance;
     }
 
-    /** Convert JS Date → Julian Day */
+    /** Convert JS date → Julian UT */
     public getJulianDay(date: Date): number {
-        return MakeTime(date).ut;
+        return Astronomy.MakeTime(date).ut;
     }
 
-    /**
-     * Approx Lahiri Ayanamsa calculation.
-     * Later modules (Ayanamsa.ts) will refine this.
-     */
+    /** Lahiri Ayanamsa — Simple V1 Approx */
     private getLahiriAyanamsa(date: Date): number {
-        const year =
+        const y =
             date.getUTCFullYear() +
             date.getUTCMonth() / 12 +
             date.getUTCDate() / 365;
 
-        // Lahiri approx formula
-        return (year - 285) * 50.29 / 3600; // in degrees
+        return ((y - 285) * 50.29) / 3600; // degrees
     }
 
-    /**
-     * Get sidereal (Lahiri) planetary positions.
-     */
-    public getPlanetPosition(
-        date: Date,
-        bodyName: any
-    ) {
-        const body = bodyName;
-        const time = MakeTime(date);
+    /** Sidereal Planet Position (Lahiri) */
+    public getPlanetPosition(date: Date, bodyName: any) {
+        const time = Astronomy.MakeTime(date);
 
-        // 1. Geocentric vector (true position)
-        const geo = GeoVector(body, time, true);
+        // Geocentric vector
+        const geo = Astronomy.GeoVector(bodyName, time, true);
+        const ecl = Astronomy.Ecliptic(geo);
 
-        // 2. Convert to ecliptic coordinates
-        const ecl = Ecliptic(geo);
+        // Apply ayanamsa
+        const ay = this.getLahiriAyanamsa(date);
+        let sidereal = ecl.elon - ay;
+        if (sidereal < 0) sidereal += 360;
 
-        // 3. Apply Lahiri Ayanamsa
-        let ayanamsa = this.getLahiriAyanamsa(date);
-        let siderealLong = ecl.elon - ayanamsa;
-        if (siderealLong < 0) siderealLong += 360;
-
-        // 4. Retrograde check (compare 1 hr later)
-        const next = MakeTime(new Date(date.getTime() + 3600000));
-        const geoNext = GeoVector(body, next, true);
-        const eclNext = Ecliptic(geoNext);
+        // Retrograde check (1 hour forward)
+        const next = Astronomy.MakeTime(new Date(date.getTime() + 3600000));
+        const geoNext = Astronomy.GeoVector(bodyName, next, true);
+        const eclNext = Astronomy.Ecliptic(geoNext);
 
         let speed = eclNext.elon - ecl.elon;
         if (speed > 180) speed -= 360;
         if (speed < -180) speed += 360;
 
-        const isRetro = speed < 0;
-
         return {
-            longitude: siderealLong,
+            longitude: sidereal,
             latitude: ecl.elat,
             distance: geo.Length(),
             speed,
-            isRetrograde: isRetro
+            isRetrograde: speed < 0
         };
     }
 
-    /**
-     * Calculate Ascendant (Lagna)
-     */
+    /** Ascendant / Lagna (Sidereal) */
     public getAscendant(date: Date, lat: number, lon: number): number {
-        const time = MakeTime(date);
-        const gst = SiderealTime(time); // GMST (hours)
-        const lst = (gst + lon / 15) % 24; // Local ST
+        const time = Astronomy.MakeTime(date);
+        const gst = Astronomy.SiderealTime(time);
+        const lst = (gst + lon / 15 + 24) % 24;
 
-        const eps = 23.4392911 * (Math.PI / 180); // obliquity rad
-        const latRad = lat * (Math.PI / 180);
-        const ramc = lst * 15 * (Math.PI / 180);
+        const eps = (23.4392911 * Math.PI) / 180;
+        const ramc = (lst * 15 * Math.PI) / 180;
+        const φ = (lat * Math.PI) / 180;
 
         const num = Math.cos(ramc);
         const den =
             -Math.sin(ramc) * Math.cos(eps) -
-            Math.tan(latRad) * Math.sin(eps);
+            Math.tan(φ) * Math.sin(eps);
 
-        let asc = Math.atan2(num, den) * (180 / Math.PI);
+        let asc = (Math.atan2(num, den) * 180) / Math.PI;
         if (asc < 0) asc += 360;
 
-        // Apply Ayanamsa (sidereal ascendant)
+        // Ayanamsa
         const ay = this.getLahiriAyanamsa(date);
         asc -= ay;
         if (asc < 0) asc += 360;
@@ -112,14 +84,12 @@ export class AstronomyWrapper {
         return asc % 360;
     }
 
-    /**
-     * Sunrise / Sunset
-     */
+    /** Sunrise / Sunset */
     public getRiseSet(date: Date, lat: number, lon: number) {
-        const obs = new Observer(lat, lon, 0);
+        const obs = new Astronomy.Observer(lat, lon, 0);
 
-        const rise = SearchRiseSet(Body.Sun, obs, +1, date, 1);
-        const set = SearchRiseSet(Body.Sun, obs, -1, date, 1);
+        const rise = Astronomy.SearchRiseSet(Astronomy.Body.Sun, obs, +1, date, 1);
+        const set = Astronomy.SearchRiseSet(Astronomy.Body.Sun, obs, -1, date, 1);
 
         return {
             rise: rise?.date || null,

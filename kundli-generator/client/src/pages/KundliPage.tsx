@@ -8,22 +8,21 @@ import NorthChart from "../components/charts/NorthChart";
 import SouthChart from "../components/charts/SouthChart";
 import { PlanetGlyphs } from "../components/glyphs/PlanetGlyphs";
 
+
 interface KundliResponse {
   ascendant: { sign: string; degree: number };
   planets: Record<string, any>;
   houses: any[];
   nakshatras: Record<string, any>;
-  panchang: Record<string, any>;
+  panchang: any;
   dasha: any[];
   charts?: any;
   dosha: any;
-  matching?: any;
   generatedAt: string;
 }
 
 function NakshatraCard({ planet, nak }: { planet: string; nak: any }) {
   if (!nak) return null;
-
   const n = nak.nakshatra || nak;
 
   return (
@@ -51,21 +50,70 @@ function NakshatraCard({ planet, nak }: { planet: string; nak: any }) {
   );
 }
 
-function DataSection({ title, data }: { title: string; data: any }) {
-  const isEmpty =
-    !data || (typeof data === "object" && Object.keys(data).length === 0);
+function PanchangCard({ p }: { p: any }) {
+  if (!p) return null;
 
   return (
-    <section>
-      <h3 className="text-xl font-semibold mb-2 capitalize text-cyan-300">
-        {title}
-      </h3>
-      <pre className="bg-black/40 p-4 rounded-xl overflow-x-auto text-sm border border-white/10">
-        {isEmpty ? "⚠️ No detailed data available." : JSON.stringify(data, null, 2)}
-      </pre>
-    </section>
+    <Card title="📅 Panchang">
+      <div className="grid grid-cols-2 gap-4 text-sm">
+        <div>
+          <p><strong>Tithi:</strong> {p.tithi}</p>
+          <p><strong>Paksha:</strong> {p.paksha}</p>
+          <p><strong>Nakshatra:</strong> {p.nakshatra} (Pada {p.nakshatraPada})</p>
+          <p><strong>Yoga:</strong> {p.yoga}</p>
+          <p><strong>Karana:</strong> {p.karana}</p>
+        </div>
+
+        <div>
+          <p><strong>Weekday:</strong> {p.weekday}</p>
+          <p><strong>Moon Phase:</strong> {p.moonPhase}</p>
+          <p><strong>Sunrise:</strong> {p.sunrise ? new Date(p.sunrise).toLocaleTimeString() : "—"}</p>
+          <p><strong>Sunset:</strong> {p.sunset ? new Date(p.sunset).toLocaleTimeString() : "—"}</p>
+        </div>
+      </div>
+    </Card>
   );
 }
+
+function DashaCard({ items }: { items: any[] }) {
+  if (!items || !items.length) return null;
+
+  return (
+    <Card title="🔶 Vimshottari Dasha">
+      <div className="space-y-4">
+        {items.map((d, i) => (
+          <div
+            key={i}
+            className="bg-black/30 p-4 rounded-xl border border-white/10 shadow-md"
+          >
+            <p className="text-cyan-300 font-semibold">{d.lord}</p>
+            <p><strong>Start:</strong> {new Date(d.start).toDateString()}</p>
+            <p><strong>End:</strong> {new Date(d.end).toDateString()}</p>
+            <p><strong>Duration:</strong> {d.durationYears} years</p>
+          </div>
+        ))}
+      </div>
+    </Card>
+  );
+}
+
+function DoshaCard({ d }: { d: any }) {
+  if (!d) return null;
+
+  return (
+    <Card title="🌀 Dosha Analysis">
+      <div className="grid grid-cols-2 gap-4 text-sm">
+        {Object.entries(d).map(([key, value]) => (
+          <p key={key}>
+            <strong className="capitalize">{key.replace(/([A-Z])/g, " $1")}:</strong>{" "}
+            {value ? "Present" : "Not Present"}
+          </p>
+        ))}
+      </div>
+    </Card>
+  );
+}
+
 
 function Card({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -106,8 +154,6 @@ function HouseTable({ houses }: { houses: any[] }) {
   );
 }
 
-/* ------------------------------ MAIN PAGE ------------------------------ */
-
 export default function KundliPage() {
   const [form, setForm] = useState({
     name: "",
@@ -124,8 +170,6 @@ export default function KundliPage() {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<KundliResponse | null>(null);
   const [error, setError] = useState("");
-
-  /* ------------------ INPUT HANDLER ------------------ */
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
@@ -149,8 +193,6 @@ export default function KundliPage() {
     }));
   }
 
-  /* ------------------ SUBMIT ------------------ */
-
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setLoading(true);
@@ -158,20 +200,14 @@ export default function KundliPage() {
     setData(null);
 
     try {
-      const res = await axios.post("http://localhost:5000/api/kundli", {
-        ...form
-      });
-
+      const res = await axios.post("http://localhost:5000/api/kundli", { ...form });
       setData(res.data.data);
-    } catch (err) {
-      console.log("Kundli API Error:", err);
+    } catch {
       setError("❌ Failed to generate Kundli. Please check backend.");
     }
 
     setLoading(false);
   }
-
-  /* ------------------ LOADING ------------------ */
 
   if (loading) {
     return (
@@ -181,8 +217,6 @@ export default function KundliPage() {
     );
   }
 
-  /* ------------------------------ UI ------------------------------ */
-
   return (
     <div className="min-h-screen w-full bg-[#050510] text-white p-6 flex flex-col items-center select-none">
 
@@ -190,7 +224,6 @@ export default function KundliPage() {
         🔮 Kundli Generator
       </h1>
 
-      {/* FORM */}
       <form
         onSubmit={handleSubmit}
         className="w-full max-w-lg bg-white/10 backdrop-blur-xl rounded-2xl p-6 space-y-4 shadow-xl border border-white/20"
@@ -233,13 +266,11 @@ export default function KundliPage() {
 
       {error && <p className="text-red-400 mt-4">{error}</p>}
 
-      {/* RESULT */}
       {data && (
         <div className="w-full max-w-5xl mt-10 p-6 bg-white/10 rounded-2xl backdrop-blur-xl border border-white/20 shadow-xl">
 
           <ChartToggle active={activeTab} onChange={setActiveTab} />
 
-          {/* DETAILS TAB */}
           {activeTab === "details" && (
             <div className="space-y-6 animate-fade-in">
 
@@ -261,31 +292,37 @@ export default function KundliPage() {
                 ))}
               </Card>
 
-              <DataSection title="📅 Panchang" data={data.panchang} />
-              <DataSection title="🔶 Dasha" data={data.dasha} />
-              <DataSection title="🌀 Dosha" data={data.dosha} />
+              <Card title="📅 Panchang">
+                <pre className="bg-black/40 p-4 rounded-xl text-sm overflow-x-auto border border-white/10">
+                  <PanchangCard p={data.panchang} />
+                </pre>
+              </Card>
+
+              <Card title="🔶 Dasha">
+                <pre className="bg-black/40 p-4 rounded-xl text-sm overflow-x-auto border border-white/10">
+                  <DashaCard items={data.dasha} />
+                </pre>
+              </Card>
+
+              <Card title="🌀 Dosha">
+                <pre className="bg-black/40 p-4 rounded-xl text-sm overflow-x-auto border border-white/10">
+                  <DoshaCard d={data.dosha} />
+                </pre>
+              </Card>
             </div>
           )}
 
-          {/* CHARTS TAB */}
           {activeTab === "charts" && (
             <div className="animate-fade-in">
-              <h2 className="text-2xl font-bold text-cyan-300 mb-4">
-                🧿 Vedic Charts
-              </h2>
+              <h2 className="text-2xl font-bold text-cyan-300 mb-4">🧿 Vedic Charts</h2>
 
-              <h3 className="text-xl text-cyan-200 mb-2">
-                North Indian Chart
-              </h3>
+              <h3 className="text-xl text-cyan-200 mb-2">North Indian Chart</h3>
               <NorthChart houses={data.houses} planets={data.planets} />
 
-              <h3 className="text-xl text-cyan-200 mt-8 mb-2">
-                South Indian Chart
-              </h3>
+              <h3 className="text-xl text-cyan-200 mt-8 mb-2">South Indian Chart</h3>
               <SouthChart houses={data.houses} planets={data.planets} />
             </div>
           )}
-
         </div>
       )}
     </div>

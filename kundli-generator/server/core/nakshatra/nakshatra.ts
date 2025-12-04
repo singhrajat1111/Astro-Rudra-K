@@ -7,32 +7,44 @@ export const NAKSHATRAS = [
     "Shatabhisha", "Purva Bhadrapada", "Uttara Bhadrapada", "Revati"
 ];
 
+/* ----------------------------------------------
+   TYPES
+---------------------------------------------- */
+
 export interface NakshatraInfo {
-    index: number;
-    name: string;
-    pada: number;
-    degreesTraversed: number;
-    degreesRemaining: number;
+    index: number;             // 1–27
+    name: string;              // Nakshatra name
+    pada: number;              // 1–4
+    degreesTraversed: number;  // 0 – 13°20'
+    degreesRemaining: number;  // remaining degrees in nakshatra
 }
 
-export const calculateNakshatra = (longitude: number): NakshatraInfo => {
-    const NAK_LENGTH = 360 / 27; // 13°20'
+/* ----------------------------------------------
+   MAIN FUNCTION
+---------------------------------------------- */
 
-    // Normalize longitude
+export const calculateNakshatra = (longitude: number): NakshatraInfo => {
+    const TOTAL_NAK = 27;
+    const NAK_LENGTH = 360 / TOTAL_NAK;   // 13°20' = 13.333333°
+    const PADA_LENGTH = NAK_LENGTH / 4;   // 3°20' = 3.333333°
+
+    // Normalize longitude 0–360
     let long = longitude % 360;
     if (long < 0) long += 360;
 
+    // Find Nakshatra index
     const nakIndex = Math.floor(long / NAK_LENGTH);
-    const nakshatra = NAKSHATRAS[nakIndex];
+    const name = NAKSHATRAS[nakIndex];
 
-    // Each pada = 3°20'
+    // Degrees inside that Nakshatra
     const degreesInNak = long - nakIndex * NAK_LENGTH;
-    const PADA_LENGTH = NAK_LENGTH / 4;
+
+    // Pada calculation
     const pada = Math.floor(degreesInNak / PADA_LENGTH) + 1;
 
     return {
         index: nakIndex + 1,
-        name: nakshatra,
+        name,
         pada,
         degreesTraversed: degreesInNak,
         degreesRemaining: NAK_LENGTH - degreesInNak

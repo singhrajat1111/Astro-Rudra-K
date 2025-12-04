@@ -1,5 +1,6 @@
 import { AstronomyWrapper } from "../astronomy/AstronomyWrapper";
 import { getNakshatra } from "../core/Nakshatra";
+import { PLANETS } from "../core/Planets";
 
 export interface PanchangData {
     tithi: string;
@@ -70,8 +71,8 @@ export class Panchang {
      */
     public calculate(date: Date, lat: number, lon: number): PanchangData {
         // Solar and lunar sidereal longitudes
-        const sun = this.astronomy.getPlanetPosition(date, "Sun");
-        const moon = this.astronomy.getPlanetPosition(date, "Moon");
+        const sun = this.astronomy.getPlanetPosition(date, PLANETS.Sun.body);
+        const moon = this.astronomy.getPlanetPosition(date, PLANETS.Moon.body);
 
         // 1. TITHI
         const moonSunDiff = (moon.longitude - sun.longitude + 360) % 360;

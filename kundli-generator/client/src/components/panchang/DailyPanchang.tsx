@@ -1,46 +1,102 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
-import CitySearch from "../CitySearch";
-import { PanchangCard } from "./PanchangCard";
+import axios from "axios";
+import PanchangCard from "./PanchangCard";
+interface PanchangData {
+  tithi: any;
+  nakshatra: any;
+  yoga: any;
+  karana: any;
+  weekday: string;
+  sunrise: { iso: string | null; local: string | null };
+  sunset: { iso: string | null; local: string | null };
+}
 
 export default function DailyPanchang() {
-  const today = new Date().toISOString().split("T")[0];
+  const [data, setData] = useState<PanchangData | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  const [location, setLocation] = useState({
-    lat: 28.6139,
-    lon: 77.2090,
-    timezone: 5.5,
-    dst: 0,
-    place: "New Delhi"
-  });
+  async function fetchTodayPanchang() {
+    try {
+      setLoading(true);
 
-  const [data, setData] = useState<any>(null);
+      const res = await axios.post("http://localhost:5000/api/panchang/daily", {
+        lat: 28.6139,       // Default: Delhi (AstroSage style)
+        lon: 77.2090,
+        timezone: 5.5,
+        dst: 0
+      });
 
-  async function fetchPanchang() {
-    const res = await axios.post("http://localhost:5000/api/panchang", {
-      date: today,
-      lat: location.lat,
-      lon: location.lon,
-      timezone: location.timezone,
-      dst: location.dst
-    });
+      setData(res.data.data);
+    } catch (err) {
+      console.error("Panchang Error:", err);
+    }
 
-    setData(res.data.data);
+    setLoading(false);
   }
 
   useEffect(() => {
-    fetchPanchang();
-  }, [location]);
+    fetchTodayPanchang();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="text-center text-xl text-cyan-300 mt-10">
+        Loading Panchang...
+      </div>
+    );
+  }
+
+  if (!data) return null;
 
   return (
-    <div className="space-y-4">
-      <CitySearch onSelect={setLocation} />
+    <div className="space-y-5">
 
-      {!data ? (
-        <p className="text-cyan-300">Loading Panchang…</p>
-      ) : (
-        <PanchangCard data={data} date={today} place={location.place} />
-      )}
+      <PanchangCard title="📅 Weekday">
+        {data.weekday}
+      </PanchangCard>
+
+      <PanchangCard title="🌙 Tithi">
+        <div className="text-lg">{data.tithi.name} ({data.tithi.paksha})</div>
+        <div className="text-sm text-gray-300 mt-1">
+          Start: {data.tithi.startLocal} <br />
+          End: {data.tithi.endLocal}
+        </div>
+      </PanchangCard>
+
+      <PanchangCard title="✨ Nakshatra">
+        <div className="text-lg">{data.nakshatra.name} (Pada {data.nakshatra.pada})</div>
+        <div className="text-sm text-gray-300 mt-1">
+          Start: {data.nakshatra.startLocal} <br />
+          End: {data.nakshatra.endLocal}
+        </div>
+      </PanchangCard>
+
+      <PanchangCard title="🌀 Yoga">
+        <div className="text-lg">{data.yoga.name}</div>
+        <div className="text-sm text-gray-300 mt-1">
+          Start: {data.yoga.startLocal} <br />
+          End: {data.yoga.endLocal}
+        </div>
+      </PanchangCard>
+
+      <PanchangCard title="⚡ Karana">
+        <div className="text-lg">{data.karana.name}</div>
+        <div className="text-sm text-gray-300 mt-1">
+          Start: {data.karana.startLocal} <br />
+          End: {data.karana.endLocal}
+        </div>
+      </PanchangCard>
+
+      <div className="grid grid-cols-2 gap-4">
+        <PanchangCard title="🌅 Sunrise">
+          {data.sunrise.local || "—"}
+        </PanchangCard>
+
+        <PanchangCard title="🌆 Sunset">
+          {data.sunset.local || "—"}
+        </PanchangCard>
+      </div>
+      
     </div>
   );
 }

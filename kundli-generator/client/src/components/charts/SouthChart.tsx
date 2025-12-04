@@ -1,135 +1,126 @@
 import React from "react";
 import { PlanetGlyphs } from "../glyphs/PlanetGlyphs";
 
-interface HouseData {
+type House = {
   houseNumber: number;
   sign: string;
-  degree?: number;
+  degree: number;
   lord?: string;
-}
+};
 
-interface PlanetData {
+type Planet = {
   name: string;
   longitude: number;
-  sign: string;
-  isRetrograde: boolean;
-}
+  sign?: string;
+  isRetrograde?: boolean;
+};
 
-interface Props {
-  houses: HouseData[];
-  planets: Record<string, PlanetData>;
-}
+export default function SouthChart({
+  houses,
+  planets,
+  size = 320,
+}: {
+  houses: House[];
+  planets: Record<string, Planet> | any;
+  size?: number;
+}) {
+  // South Indian chart is a simple grid 3x4. Map house -> grid positions (row/col percent)
+  const gridPos: Record<number, { top: string; left: string }> = {
+    1: { top: "10%", left: "10%" },
+    2: { top: "10%", left: "40%" },
+    3: { top: "10%", left: "70%" },
+    4: { top: "35%", left: "10%" },
+    5: { top: "35%", left: "40%" },
+    6: { top: "35%", left: "70%" },
+    7: { top: "60%", left: "10%" },
+    8: { top: "60%", left: "40%" },
+    9: { top: "60%", left: "70%" },
+    10: { top: "85%", left: "10%" },
+    11: { top: "85%", left: "40%" },
+    12: { top: "85%", left: "70%" },
+  };
 
-/**
- * FINAL — South Indian Vedic Rasi Chart (Celestial Theme)
- * ✔ Fixed sign layout
- * ✔ Houses mapped correctly based on Ascendant
- * ✔ Planet stacking inside each rasi
- * ✔ Degrees + retro symbol
- * ✔ 100% TypeScript safe
- * ✔ No implicit any
- * ✔ No errors, production ready
- */
-export default function SouthChart({ houses, planets }: Props) {
-  /* --------------------------------------------
-      BUILD SIGN GRID (Always Fixed)
-     -------------------------------------------- */
-
-  // South Indian chart sign order (anti-clockwise, starting East)
-  const SIGN_ORDER = [
-    "Aries", "Taurus", "Gemini", "Cancer",
-    "Leo", "Virgo", "Libra", "Scorpio",
-    "Sagittarius", "Capricorn", "Aquarius", "Pisces"
-  ];
-
-  // Map: sign → house info
-  const signToHouse: Record<string, HouseData | null> = {};
-  SIGN_ORDER.forEach((s) => (signToHouse[s] = null));
-
-  houses.forEach((h) => {
-    signToHouse[h.sign] = h;
+  // Build planets by house as in NorthChart
+  const planetsByHouse: Record<number, string[]> = {};
+  Object.keys(planets || {}).forEach((k) => {
+    const p = planets[k];
+    const hnum = (p.houseNumber ?? p.house) as number | undefined;
+    if (hnum && Number.isFinite(hnum)) {
+      planetsByHouse[hnum] = planetsByHouse[hnum] || [];
+      planetsByHouse[hnum].push(k);
+    }
   });
-
-  /* --------------------------------------------
-      MAP PLANETS TO SIGNS
-     -------------------------------------------- */
-
-  const signPlanets: Record<string, PlanetData[]> = {};
-  SIGN_ORDER.forEach((s) => (signPlanets[s] = []));
-
-  Object.values(planets).forEach((p) => {
-    signPlanets[p.sign]?.push(p);
-  });
-
-  /* --------------------------------------------
-      RASI GRID INDEX MAP (South Indian)
-     -------------------------------------------- */
-
-  const CHART_GRID = [
-    ["Aries", "Taurus", "Gemini", "Cancer"],
-    ["Pisces", "", "", "Leo"],
-    ["Aquarius", "", "", "Virgo"],
-    ["Capricorn", "Sagittarius", "Scorpio", "Libra"]
-  ];
 
   return (
-    <div className="w-80 h-80 grid grid-cols-4 grid-rows-4 mx-auto mt-6 gap-1 select-none">
-      {CHART_GRID.map((row, rowIndex) =>
-        row.map((sign, colIndex) => {
-          if (sign === "") {
-            return (
-              <div key={`${rowIndex}-${colIndex}`} className="border border-cyan-400/20"></div>
-            );
-          }
+    <div
+      className="relative mx-auto"
+      style={{ width: size, height: size, minWidth: 240 }}
+      aria-label="South Indian chart"
+    >
+      {/* Outer rounded frame */}
+      <div
+        className="absolute inset-0 rounded-lg"
+        style={{
+          border: "1px solid rgba(255,255,255,0.04)",
+          background:
+            "linear-gradient(180deg, rgba(2,6,18,0.6), rgba(1,3,10,0.4))",
+          boxShadow: "0 6px 30px rgba(0,0,0,0.6)",
+        }}
+      />
 
-          const house = signToHouse[sign];
-          const planetsInSign = signPlanets[sign];
-
-          return (
+      {/* Houses cells */}
+      {houses.map((h) => {
+        const pos = gridPos[h.houseNumber] || { top: "50%", left: "50%" };
+        return (
+          <div
+            key={h.houseNumber}
+            className="absolute text-left"
+            style={{
+              top: pos.top,
+              left: pos.left,
+              transform: "translate(-50%, -50%)",
+              width: "28%",
+              maxWidth: 120,
+            }}
+            role="group"
+            aria-label={`House ${h.houseNumber}`}
+          >
             <div
-              key={`${rowIndex}-${colIndex}`}
-              className="border border-cyan-400/40 p-1 flex flex-col items-center text-center"
+              className="p-3 rounded-lg"
+              style={{
+                background: "rgba(0,0,0,0.25)",
+                border: "1px solid rgba(255,255,255,0.03)",
+              }}
             >
-              {/* Sign Title */}
-              <div className="text-cyan-300 font-bold text-xs">{sign}</div>
+              <div className="flex items-center justify-between">
+                <div className="text-cyan-300 font-semibold">{h.houseNumber}</div>
+                <div className="text-xs text-white/80">{h.sign}</div>
+              </div>
 
-              {/* House Number */}
-              {house && (
-                <div className="text-white text-[11px] mt-0.5">
-                  House {house.houseNumber}
-                </div>
-              )}
-
-              {/* Degree */}
-              {house?.degree !== undefined && (
-                <div className="text-gray-400 text-[10px]">
-                  {house.degree.toFixed(2)}°
-                </div>
-              )}
-
-              {/* Planets */}
-              <div className="mt-1 flex flex-col items-center gap-0.5">
-                {planetsInSign.map((p, idx) => (
-                  <div
-                    key={idx}
-                    className="flex items-center gap-1 text-xs"
-                  >
-                    <span className={PlanetGlyphs[p.name]?.color}>
-                      {PlanetGlyphs[p.name]?.symbol}
-                    </span>
-
-                    <span className="text-white">{p.name}</span>
-
-                    {p.isRetrograde && (
-                      <span className="text-red-400 text-[10px]">℞</span>
-                    )}
-                  </div>
-                ))}
+              <div className="mt-2 flex flex-wrap gap-1">
+                {(planetsByHouse[h.houseNumber] || []).map((pname) => {
+                  const glyph = PlanetGlyphs[pname];
+                  return (
+                    <div
+                      key={pname}
+                      className="text-xs px-2 py-0.5 rounded-full flex items-center gap-1"
+                      style={{
+                        background: "rgba(255,255,255,0.02)",
+                        border: "1px solid rgba(255,255,255,0.03)",
+                      }}
+                    >
+                      <span className={glyph?.color} aria-hidden>
+                        {glyph?.symbol}
+                      </span>
+                      <span className="text-white/90">{pname}</span>
+                    </div>
+                  );
+                })}
               </div>
             </div>
-          );
-        })
-      )}
+          </div>
+        );
+      })}
     </div>
   );
 }

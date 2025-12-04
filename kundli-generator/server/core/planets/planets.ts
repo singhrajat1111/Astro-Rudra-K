@@ -1,63 +1,56 @@
 import * as Astronomy from "astronomy-engine";
-import { AstronomyWrapper } from "../../astro-engine/astronomy/AstronomyWrapper";
 
-// @ts-ignore
-const Body = Astronomy.Body || Astronomy.default?.Body;
-// @ts-ignore
-const AstroTime = Astronomy.AstroTime || Astronomy.default?.AstroTime;
+/** ----------------------------------------------
+ *  VEDIC PLANET ENUM
+ *  Used throughout the KundliEngine
+ * ---------------------------------------------- */
+export type Planet =
+  | "Sun"
+  | "Moon"
+  | "Mars"
+  | "Mercury"
+  | "Jupiter"
+  | "Venus"
+  | "Saturn"
+  | "Rahu"
+  | "Ketu";
 
-const PLANETS_MAP: Record<string, AstroBody> = {
-    Sun: Body.Sun,
-    Moon: Body.Moon,
-    Mars: Body.Mars,
-    Mercury: Body.Mercury,
-    Jupiter: Body.Jupiter,
-    Venus: Body.Venus,
-    Saturn: Body.Saturn,
-    Uranus: Body.Uranus,
-    Neptune: Body.Neptune,
-    Pluto: Body.Pluto
+/** ----------------------------------------------
+ *  PLANET → ASTRONOMY-ENGINE BODY MAP
+ *  Rahu/Ketu handled manually inside KundliEngine
+ * ---------------------------------------------- */
+export interface PlanetInfo {
+  body: Astronomy.Body | null;  // Rahu/Ketu will be null
+  key: Planet;
+}
+
+export const PLANETS: Record<Planet, PlanetInfo> = {
+  Sun:     { key: "Sun",     body: Astronomy.Body.Sun },
+  Moon:    { key: "Moon",    body: Astronomy.Body.Moon },
+  Mars:    { key: "Mars",    body: Astronomy.Body.Mars },
+  Mercury: { key: "Mercury", body: Astronomy.Body.Mercury },
+  Jupiter: { key: "Jupiter", body: Astronomy.Body.Jupiter },
+  Venus:   { key: "Venus",   body: Astronomy.Body.Venus },
+  Saturn:  { key: "Saturn",  body: Astronomy.Body.Saturn },
+
+  // Rahu & Ketu → No astronomy-engine body
+  Rahu:    { key: "Rahu",    body: null },
+  Ketu:    { key: "Ketu",    body: null }
 };
 
-export const calculatePlanets = (jd: number) => {
-    const positions: any = {};
-    const date = new AstroTime(jd).date;
-    const astronomy = AstronomyWrapper.getInstance();
+/** ----------------------------------------------
+ *  ZODIAC SIGN TYPE
+ * ---------------------------------------------- */
+export type ZodiacSign =
+  | "Aries" | "Taurus" | "Gemini" | "Cancer" | "Leo" | "Virgo"
+  | "Libra" | "Scorpio" | "Sagittarius" | "Capricorn" | "Aquarius" | "Pisces";
 
-    for (const [name, body] of Object.entries(PLANETS_MAP)) {
-        const pos = astronomy.getPlanetPosition(date, body);
-        positions[name] = {
-            id: name,
-            name: name,
-            longitude: pos.longitude,
-            latitude: pos.latitude,
-            distance: pos.distance,
-            speed: pos.speed,
-            isRetrograde: pos.isRetrograde
-        };
-    }
-
-    // Rahu/Ketu placeholder
-    // TODO: Implement Rahu/Ketu calculation using astronomy-engine or other method
-    // For now, returning 0/180 to prevent crash, as astronomy-engine doesn't support Nodes directly in Body enum
-    positions['Rahu'] = {
-        id: 'Rahu',
-        name: 'Rahu',
-        longitude: 0,
-        latitude: 0,
-        distance: 0,
-        speed: 0,
-        isRetrograde: true
-    };
-    positions['Ketu'] = {
-        id: 'Ketu',
-        name: 'Ketu',
-        longitude: 180,
-        latitude: 0,
-        distance: 0,
-        speed: 0,
-        isRetrograde: true
-    };
-
-    return positions;
-};
+/** ----------------------------------------------
+ *  PlanetPosition (returned by AstronomyWrapper)
+ * ---------------------------------------------- */
+export interface PlanetPosition {
+  longitude: number;
+  latitude?: number;
+  distance?: number;
+  isRetrograde: boolean;
+}

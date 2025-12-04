@@ -1,27 +1,20 @@
-export function PanchangCard({
-  data,
-  date,
-  place
+import { ReactNode } from "react";
+
+export default function PanchangCard({
+  title,
+  children,
 }: {
-  data: any;
-  date: string;
-  place: string;
+  title: string;
+  children: ReactNode;
 }) {
   return (
-    <div className="bg-[#0b0b18] p-6 rounded-2xl border border-white/10 shadow-xl space-y-3">
-      <h2 className="text-2xl font-bold text-cyan-300">
-        📅 Panchang for {place} — {date}
-      </h2>
+    <div className="bg-[#0b0b18] p-5 rounded-2xl border border-cyan-400/20 shadow-xl">
+      <h3 className="text-lg font-bold text-cyan-300 mb-2">
+        {title}
+      </h3>
 
-      <div className="grid grid-cols-2 gap-4 text-sm text-gray-300">
-        <p><strong>Tithi:</strong> {data.tithi} ({data.paksha})</p>
-        <p><strong>Nakshatra:</strong> {data.nakshatra} (Pada {data.nakshatraPada})</p>
-        <p><strong>Yoga:</strong> {data.yoga}</p>
-        <p><strong>Karana:</strong> {data.karana}</p>
-        <p><strong>Sunrise:</strong> {data.sunrise}</p>
-        <p><strong>Sunset:</strong> {data.sunset}</p>
-        <p><strong>Moon Phase:</strong> {data.moonPhase}</p>
-        <p><strong>Weekday:</strong> {data.weekday}</p>
+      <div className="text-white text-sm leading-relaxed">
+        {children}
       </div>
     </div>
   );

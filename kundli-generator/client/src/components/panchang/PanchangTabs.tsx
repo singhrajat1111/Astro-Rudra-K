@@ -1,32 +1,36 @@
-export default function PanchangTabs({
-  active,
-  onChange
-}: {
+interface Props {
   active: "daily" | "date";
   onChange: (tab: "daily" | "date") => void;
-}) {
+}
+
+export default function PanchangTabs({ active, onChange }: Props) {
   return (
-    <div className="flex gap-4 mb-6 bg-white/10 px-4 py-2 rounded-xl border border-white/20 backdrop-blur">
+    <div className="flex items-center justify-center gap-4 bg-white/10 p-2 rounded-xl border border-white/20 backdrop-blur-xl">
+
+      {/* Daily Panchang */}
       <button
         onClick={() => onChange("daily")}
-        className={`px-4 py-2 rounded-lg font-semibold ${
-          active === "daily"
-            ? "bg-cyan-500 text-black"
-            : "text-cyan-300 hover:text-white"
-        }`}
+        className={`px-5 py-2 rounded-lg font-semibold transition-all
+          ${active === "daily"
+            ? "bg-gradient-to-r from-indigo-500 to-blue-600 text-white shadow-lg"
+            : "bg-white/10 text-gray-300 hover:bg-white/20"
+          }
+        `}
       >
-        Today’s Panchang
+        Daily
       </button>
 
+      {/* Date-based Panchang */}
       <button
         onClick={() => onChange("date")}
-        className={`px-4 py-2 rounded-lg font-semibold ${
-          active === "date"
-            ? "bg-cyan-500 text-black"
-            : "text-cyan-300 hover:text-white"
-        }`}
+        className={`px-5 py-2 rounded-lg font-semibold transition-all
+          ${active === "date"
+            ? "bg-gradient-to-r from-indigo-500 to-blue-600 text-white shadow-lg"
+            : "bg-white/10 text-gray-300 hover:bg-white/20"
+          }
+        `}
       >
-        Panchang by Date
+        By Date
       </button>
     </div>
   );
