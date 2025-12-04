@@ -10,10 +10,13 @@ import { Matching, MatchingResult } from "./matching/Matching.js";
 
 
 export interface KundliRequest {
-    date: Date;
-    lat: number;
-    lon: number;
-    girlMoonLongitude?: number;
+  date: Date;           // MUST BE UTC
+  lat: number;
+  lon: number;
+  timezone: number;     // NEW — required for correct panchang & ascendant
+  dst: number;          // NEW — daylight saving offset
+  place?: string;       // NEW — optional label for charts / UI
+  girlMoonLongitude?: number;
 }
 
 export interface PlanetCalculated {
@@ -123,7 +126,7 @@ export class KundliEngine {
 
     /** Master method: produces full Kundli JSON */
     public generate(req: KundliRequest): KundliResponse {
-        const { date, lat, lon } = req;
+        const { date, lat, lon, timezone, dst, place } = req;
 
         /* -----------------------------
            1 — Ascendant
