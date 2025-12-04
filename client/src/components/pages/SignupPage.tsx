@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import AuthLayout from "../components/AuthLayout";
+import { motion } from "motion/react";
+import AuthLayout from "../AuthLayout";
+import NebulaGhostButton from "../NebulaGhostButton";
 
 export default function Signup() {
   const [form, setForm] = useState({
@@ -16,14 +18,26 @@ export default function Signup() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Signup data:", form);
-    // TODO: Call backend API
   };
 
   return (
     <AuthLayout>
-      <form onSubmit={handleSubmit} className="space-y-5">
-        <div>
-          <label className="text-gray-300 text-sm">Full Name</label>
+      <motion.form
+        onSubmit={handleSubmit}
+        initial={{ opacity: 0, y: 25 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7 }}
+        className="space-y-6 w-full"
+      >
+        {/* Full Name */}
+        <div className="space-y-2">
+          <label
+            className="text-gray-300 text-lg"
+            style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+          >
+            Full Name
+          </label>
+
           <input
             type="text"
             name="name"
@@ -31,12 +45,22 @@ export default function Signup() {
             placeholder="Your Name"
             value={form.name}
             onChange={handleChange}
-            className="w-full px-4 py-3 mt-1 rounded-xl bg-[#0c0f17] border border-white/10 text-gray-200 focus:ring-2 focus:ring-purple-500 outline-none"
+            className="w-full px-4 py-3 rounded-xl bg-[#0d1018]/80 backdrop-blur-md
+            border border-white/10 text-gray-200
+            focus:ring-2 focus:ring-purple-500/60 focus:border-purple-500/60
+            transition-all duration-300 outline-none"
           />
         </div>
 
-        <div>
-          <label className="text-gray-300 text-sm">Email</label>
+        {/* Email */}
+        <div className="space-y-2">
+          <label
+            className="text-gray-300 text-lg"
+            style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+          >
+            Email
+          </label>
+
           <input
             type="email"
             name="email"
@@ -44,12 +68,22 @@ export default function Signup() {
             placeholder="you@example.com"
             value={form.email}
             onChange={handleChange}
-            className="w-full px-4 py-3 mt-1 rounded-xl bg-[#0c0f17] border border-white/10 text-gray-200 focus:ring-2 focus:ring-purple-500 outline-none"
+            className="w-full px-4 py-3 rounded-xl bg-[#0d1018]/80 backdrop-blur-md
+            border border-white/10 text-gray-200
+            focus:ring-2 focus:ring-purple-500/60 focus:border-purple-500/60
+            transition-all duration-300 outline-none"
           />
         </div>
 
-        <div>
-          <label className="text-gray-300 text-sm">Password</label>
+        {/* Password */}
+        <div className="space-y-2">
+          <label
+            className="text-gray-300 text-lg"
+            style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+          >
+            Password
+          </label>
+
           <input
             type="password"
             name="password"
@@ -57,24 +91,26 @@ export default function Signup() {
             placeholder="••••••••"
             value={form.password}
             onChange={handleChange}
-            className="w-full px-4 py-3 mt-1 rounded-xl bg-[#0c0f17] border border-white/10 text-gray-200 focus:ring-2 focus:ring-purple-500 outline-none"
+            className="w-full px-4 py-3 rounded-xl bg-[#0d1018]/80 backdrop-blur-md
+            border border-white/10 text-gray-200
+            focus:ring-2 focus:ring-purple-500/60 focus:border-purple-500/60
+            transition-all duration-300 outline-none"
           />
         </div>
 
-        <button
-          type="submit"
-          className="w-full py-3 rounded-xl bg-gradient-to-r from-purple-500 to-blue-500 text-white font-medium shadow-md hover:shadow-lg transition"
-        >
-          Create Account
-        </button>
+        {/* Signup Button */}
+        <center className="pt-2">
+          <NebulaGhostButton>Create Account</NebulaGhostButton>
+        </center>
 
-        <p className="text-center text-gray-400 text-sm">
+        {/* Link to Login */}
+        <p className="text-center text-gray-400 text-sm mt-4">
           Already have an account?{" "}
           <Link to="/login" className="text-purple-400 hover:underline">
             Login
           </Link>
         </p>
-      </form>
+      </motion.form>
     </AuthLayout>
   );
 }

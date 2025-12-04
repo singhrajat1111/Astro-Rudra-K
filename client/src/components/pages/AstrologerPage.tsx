@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { motion } from "motion/react";
 import AstrologerCard from "../ui/AstrologerCard";
 
 interface Astrologer {
@@ -38,17 +39,51 @@ export default function Astrologers() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-black text-white py-20 px-4">
-      <h1
-        className="text-4xl font-bold text-center mb-10 mt-10"
+    <div className="min-h-screen bg-black text-white py-24 px-4 overflow-hidden">
+      {/* Background Glow */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.25 }}
+        transition={{ duration: 1.5 }}
+        className="absolute -top-32 -left-32 w-96 h-96 bg-purple-600/30 blur-[150px] rounded-full pointer-events-none"
+      />
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.25 }}
+        transition={{ duration: 1.5, delay: 0.3 }}
+        className="absolute bottom-0 right-0 w-[450px] h-[450px] bg-blue-500/20 blur-[180px] rounded-full pointer-events-none"
+      />
+
+      {/* Title */}
+      <motion.h1
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        className="text-4xl md:text-5xl font-bold text-center mb-14 tracking-wide"
         style={{ marginTop: "70px" }}
       >
         Choose Your Astrologer
-      </h1>
+      </motion.h1>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10 max-w-6xl mx-auto">
-        {astrologers.map((astro) => (
-          <div key={astro.id}>
+      {/* Grid */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1 }}
+        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10 max-w-6xl mx-auto relative z-10"
+      >
+        {astrologers.map((astro, index) => (
+          <motion.div
+            key={astro.id}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              duration: 0.7,
+              delay: index * 0.15,
+              ease: "easeOut",
+            }}
+            className="hover:scale-[1.03] transition-transform duration-300"
+          >
             <AstrologerCard
               name={astro.name}
               experience={astro.experience}
@@ -56,14 +91,17 @@ export default function Astrologers() {
               skills={astro.skills}
               image={astro.image}
               onView={() => setSelectedId(astro.id)}
-                onReach={() => {
+              onReach={() => {
                 alert(`You have selected ${astro.name}`);
                 navigate("/booking");
               }}
             />
-          </div>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
+
+      {/* Bottom Fade */}
+      <div className="absolute bottom-0 left-0 w-full h-40 bg-gradient-to-t from-black to-transparent pointer-events-none" />
     </div>
   );
 }

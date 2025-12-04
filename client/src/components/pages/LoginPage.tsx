@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { motion } from "motion/react";
 import AuthLayout from "../AuthLayout";
 import NebulaGhostButton from "../NebulaGhostButton";
 
@@ -17,9 +18,22 @@ export default function Login() {
 
   return (
     <AuthLayout>
-      <form onSubmit={handleSubmit} className="space-y-5">
-        <div>
-          <label className="text-gray-300 text-lg mb-4">Email</label>
+      <motion.form
+        onSubmit={handleSubmit}
+        initial={{ opacity: 0, y: 25 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7, ease: "easeOut" }}
+        className="space-y-6 w-full"
+      >
+        {/* EMAIL */}
+        <div className="space-y-2">
+          <label
+            className="text-gray-300 text-lg"
+            style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+          >
+            Email
+          </label>
+
           <input
             type="email"
             name="email"
@@ -27,12 +41,22 @@ export default function Login() {
             placeholder="you@example.com"
             value={form.email}
             onChange={handleChange}
-            className="w-full px-4 py-3 mt-1 rounded-xl bg-[#0c0f17] border border-white/10 text-gray-200 focus:ring-2 focus:ring-purple-500 outline-none"
+            className="w-full px-4 py-3 rounded-xl bg-[#0d1018]/80 backdrop-blur-md
+            border border-white/10 text-gray-200
+            focus:ring-2 focus:ring-purple-500/60 focus:border-purple-500/60
+            transition-all duration-300 outline-none"
           />
         </div>
 
-        <div>
-          <label className="text-gray-300 text-lg">Password</label>
+        {/* PASSWORD */}
+        <div className="space-y-2">
+          <label
+            className="text-gray-300 text-lg"
+            style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+          >
+            Password
+          </label>
+
           <input
             type="password"
             name="password"
@@ -40,22 +64,28 @@ export default function Login() {
             placeholder="••••••••"
             value={form.password}
             onChange={handleChange}
-            className="w-full px-4 py-3 mt-1 mb-4 rounded-xl bg-[#0c0f17] border border-white/10 text-gray-200 focus:ring-2 focus:ring-purple-500 outline-none"
+            className="w-full px-4 py-3 rounded-xl bg-[#0d1018]/80 backdrop-blur-md
+            border border-white/10 text-gray-200
+            focus:ring-2 focus:ring-purple-500/60 focus:border-purple-500/60
+            transition-all duration-300 outline-none"
           />
         </div>
 
-        <center>
+        {/* LOGIN BUTTON */}
+        <center className="pt-3">
           <NebulaGhostButton onClick={() => alert("this is form is submitted")}>
-            Login/Signup
+            Login / Signup
           </NebulaGhostButton>
         </center>
+
+        {/* SIGNUP LINK */}
         <p className="text-center text-gray-400 text-sm mt-4">
           Don’t have an account?{" "}
           <Link to="/signup" className="text-purple-400 hover:underline">
             Sign up
           </Link>
         </p>
-      </form>
+      </motion.form>
     </AuthLayout>
   );
 }

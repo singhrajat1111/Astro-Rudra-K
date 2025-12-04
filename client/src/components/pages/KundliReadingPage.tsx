@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { Sparkles, TrendingUp, Heart, Briefcase, Home, Shield } from "lucide-react";
+import { Sparkles, TrendingUp, Heart, Briefcase, Shield } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import AstroOrbChart from "../AstroOrbChart";
 import CosmicCapsuleCard from "../CosmicCapsuleCard";
@@ -7,6 +7,7 @@ import EnergyBurstButton from "../EnergyBurstButton";
 
 export default function KundliReadingPage() {
   const navigate = useNavigate();
+
   const dashaTimeline = [
     { planet: "Venus", period: "2020-2023", status: "completed", color: "#4EA3FF" },
     { planet: "Sun", period: "2023-2024", status: "current", color: "#FFD79A" },
@@ -76,59 +77,76 @@ export default function KundliReadingPage() {
   ];
 
   return (
-    <div className="relative pt-32 pb-20">
-      {/* Hero Section */}
+    <div className="relative pt-32 pb-20 overflow-hidden">
+
+      {/* Soft background gradient glows */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.15 }}
+        transition={{ duration: 2 }}
+        className="absolute -top-40 -left-40 w-[500px] h-[500px] bg-purple-700/30 blur-[180px] rounded-full"
+      />
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.15 }}
+        transition={{ duration: 2, delay: 0.2 }}
+        className="absolute bottom-0 right-0 w-[450px] h-[450px] bg-blue-500/20 blur-[160px] rounded-full"
+      />
+
+      {/* ——————————————————————————————————————————
+         HERO SECTION
+      ——————————————————————————————————————————— */}
       <section className="relative px-6 md:px-[120px] py-12">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 28 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.7 }}
           className="text-center mb-12 max-w-4xl mx-auto"
         >
-          <div className="inline-block mb-6 px-4 py-2 rounded-full bg-[rgba(108,51,255,0.2)] border border-[rgba(108,51,255,0.4)] glass-blur">
-            <span className="text-sm text-[#6C33FF]" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+          <div className="inline-block mb-6 px-4 py-2 rounded-full bg-purple-700/20 border border-purple-700/40 glass-blur shadow-md shadow-purple-900/20">
+            <span className="text-sm text-[#6C33FF] font-medium">
               ✨ Your Cosmic Blueprint
             </span>
           </div>
-          
-          <h1 className="text-5xl md:text-6xl mb-6 bg-gradient-to-r from-white via-[#FFD79A] to-[#6C33FF] bg-clip-text text-transparent" style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700 }}>
+
+          <h1 className="text-5xl md:text-6xl mb-6 font-bold bg-gradient-to-r from-white via-[#FFD79A] to-[#6C33FF] bg-clip-text text-transparent">
             Kundli Reading
           </h1>
-          
-          <p className="text-lg text-[rgba(255,255,255,0.7)]">
+
+          <p className="text-lg text-white/70">
             Sample birth chart analysis - Book a consultation for your personalized reading
           </p>
         </motion.div>
       </section>
 
-      {/* Astro Orb Chart Section */}
-      <section className="relative px-6 md:px-[120px] py-12">
+      {/* ——————————————————————————————————————————
+         Astro Orb Chart
+      ——————————————————————————————————————————— */}
+      <section className="relative px-6 md:px-[120px] py-14">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.7 }}
           viewport={{ once: true }}
           className="text-center mb-12"
         >
-          <h2 className="text-4xl mb-4 text-[#FFD79A]" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-            Birth Chart Visualization
-          </h2>
-          <p className="text-[rgba(255,255,255,0.7)] max-w-2xl mx-auto">
+          <h2 className="text-4xl text-[#FFD79A] font-bold mb-4">Birth Chart Visualization</h2>
+          <p className="text-white/70 max-w-2xl mx-auto">
             Interactive planetary positions in your natal chart
           </p>
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
+          initial={{ opacity: 0, scale: 0.92 }}
           whileInView={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.7, ease: "easeOut" }}
           viewport={{ once: true }}
-          className="max-w-3xl mx-auto mb-12"
+          className="max-w-3xl mx-auto mb-14"
         >
           <AstroOrbChart />
         </motion.div>
 
-        {/* Chart Info Cards */}
+        {/* Ascendant / Moon / Nakshatra */}
         <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
           {[
             { label: "Ascendant (Lagna)", value: "Aries 12°45'", icon: "♈" },
@@ -137,210 +155,204 @@ export default function KundliReadingPage() {
           ].map((item, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 14 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
+              transition={{ duration: 0.45, delay: index * 0.1 }}
               viewport={{ once: true }}
-              className="rounded-2xl bg-[rgba(255,255,255,0.04)] glass-blur border border-[rgba(255,255,255,0.1)] p-6 text-center hover:border-[rgba(255,215,154,0.4)] transition-all duration-300"
+              className="rounded-2xl glass-blur bg-white/5 border border-white/10 p-6 text-center hover:border-yellow-200/40 transition-all duration-300"
             >
-              <div className="text-4xl mb-3">{item.icon}</div>
-              <div className="text-sm text-[rgba(255,255,255,0.6)] mb-2">{item.label}</div>
-              <div className="text-lg text-[#FFD79A]" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-                {item.value}
-              </div>
+              <div className="text-4xl mb-2">{item.icon}</div>
+              <div className="text-sm text-white/60 mb-1">{item.label}</div>
+              <div className="text-lg text-[#FFD79A] font-medium">{item.value}</div>
             </motion.div>
           ))}
         </div>
       </section>
 
-      {/* Planetary Strengths */}
+      {/* ——————————————————————————————————————————
+         Planetary Strengths
+      ——————————————————————————————————————————— */}
       <section className="relative px-6 md:px-[120px] py-20">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 22 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
           className="text-center mb-12"
         >
-          <h2 className="text-4xl mb-4 text-[#FFD79A]" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-            Planetary Strengths
-          </h2>
-          <p className="text-[rgba(255,255,255,0.7)]">
-            Analysis of each planet's position and influence in your chart
-          </p>
+          <h2 className="text-4xl text-[#FFD79A] font-bold mb-4">Planetary Strengths</h2>
+          <p className="text-white/70">Analysis of each planet's position and influence in your chart</p>
         </motion.div>
 
-        <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
           {planetaryStrengths.map((item, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.05 }}
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.55, delay: index * 0.07 }}
               viewport={{ once: true }}
-              className="rounded-2xl bg-[rgba(255,255,255,0.04)] glass-blur border border-[rgba(255,255,255,0.1)] p-6 hover:border-[rgba(255,215,154,0.4)] transition-all duration-300"
+              className="rounded-2xl bg-white/5 glass-blur border border-white/10 p-6 hover:border-yellow-200/40 transition-all duration-300"
             >
+              {/* Title Row */}
               <div className="flex items-center justify-between mb-4">
                 <div>
-                  <h4 className="text-lg text-white" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-                    {item.planet}
-                  </h4>
-                  <p className="text-sm text-[rgba(255,255,255,0.6)]">{item.house}</p>
+                  <h4 className="text-lg font-semibold text-white">{item.planet}</h4>
+                  <p className="text-sm text-white/60">{item.house}</p>
                 </div>
-                <div className={`
-                  px-3 py-1 rounded-full text-xs
-                  ${item.status === "Excellent" ? "bg-[rgba(108,51,255,0.3)] text-[#6C33FF]" :
-                    item.status === "Strong" || item.status === "Good" ? "bg-[rgba(78,163,255,0.3)] text-[#4EA3FF]" :
-                    item.status === "Moderate" ? "bg-[rgba(255,215,154,0.3)] text-[#FFD79A]" :
-                    "bg-[rgba(214,138,40,0.3)] text-[#D68A28]"}
+
+                <div className={`px-3 py-1 rounded-full text-xs font-medium
+                  ${
+                    item.status === "Excellent"
+                      ? "bg-purple-600/30 text-purple-400"
+                      : item.status === "Good" || item.status === "Strong"
+                      ? "bg-blue-500/30 text-blue-300"
+                      : item.status === "Moderate"
+                      ? "bg-yellow-300/25 text-[#FFD79A]"
+                      : "bg-orange-500/25 text-orange-300"
+                  }
                 `}>
                   {item.status}
                 </div>
               </div>
 
               {/* Strength Bar */}
-              <div className="relative w-full h-2 rounded-full bg-[rgba(255,255,255,0.1)] overflow-hidden">
+              <div className="relative w-full h-2 rounded-full bg-white/10 overflow-hidden">
                 <motion.div
                   initial={{ width: 0 }}
                   whileInView={{ width: `${item.strength}%` }}
-                  transition={{ duration: 1, delay: index * 0.05 }}
+                  transition={{ duration: 1.1, ease: "easeOut" }}
                   viewport={{ once: true }}
                   className="h-full bg-gradient-to-r from-[#6C33FF] via-[#4EA3FF] to-[#FFD79A]"
                 />
               </div>
-              <div className="text-right mt-2 text-sm text-[rgba(255,255,255,0.7)]">
-                {item.strength}% Strength
+
+              <div className="text-right mt-2 text-sm text-white/70">{item.strength}% Strength</div>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* ——————————————————————————————————————————
+         Dasha Timeline
+      ——————————————————————————————————————————— */}
+      <section className="relative px-6 md:px-[120px] py-20">
+        <motion.div
+          initial={{ opacity: 0, y: 22 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="text-center mb-12"
+        >
+          <h2 className="text-4xl text-[#FFD79A] font-bold mb-4">Dasha Periods</h2>
+          <p className="text-white/70">Major planetary periods influencing your life</p>
+        </motion.div>
+
+        {/* TIMELINE */}
+        <div className="max-w-4xl mx-auto relative">
+
+          {/* Line */}
+          <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-[2px] bg-gradient-to-b from-[#6C33FF] via-[#4EA3FF] to-[#FFD79A]" />
+
+          {dashaTimeline.map((dasha, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, x: index % 2 === 0 ? -30 : 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.55, delay: index * 0.1 }}
+              viewport={{ once: true }}
+              className={`relative mb-10 ${index % 2 === 0
+                ? "md:pr-[calc(50%+3rem)]"
+                : "md:pl-[calc(50%+3rem)] md:ml-auto"} pl-20 md:pl-0`}
+            >
+              {/* Node */}
+              <div
+                className={`absolute top-0 ${
+                  index % 2 === 0 ? "left-8 md:right-0" : "left-8 md:left-0"
+                } w-8 h-8 rounded-full border-4 border-black bg-opacity-20 flex items-center justify-center`}
+                style={{ backgroundColor: dasha.color }}
+              >
+                <div className="w-2 h-2 rounded-full bg-white" />
+              </div>
+
+              {/* Card */}
+              <div
+                className={`rounded-2xl glass-blur border p-6 transition-all duration-300 ${
+                  dasha.status === "current"
+                    ? "bg-gradient-to-br from-yellow-300/20 to-orange-400/20 border-yellow-300/60 shadow-[0_0_30px_rgba(255,215,154,0.3)]"
+                    : "bg-white/5 border-white/10"
+                }`}
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <h4 className="text-xl text-white font-semibold">{dasha.planet} Dasha</h4>
+
+                  {dasha.status === "current" && (
+                    <span className="px-3 py-1 rounded-full text-xs bg-gradient-to-r from-[#FFD79A] to-[#D68A28] text-black">
+                      Current
+                    </span>
+                  )}
+                </div>
+
+                <p className="text-white/70">{dasha.period}</p>
               </div>
             </motion.div>
           ))}
         </div>
       </section>
 
-      {/* Dasha Timeline */}
+      {/* ——————————————————————————————————————————
+         Life Areas
+      ——————————————————————————————————————————— */}
       <section className="relative px-6 md:px-[120px] py-20">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
           className="text-center mb-12"
         >
-          <h2 className="text-4xl mb-4 text-[#FFD79A]" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-            Dasha Periods
-          </h2>
-          <p className="text-[rgba(255,255,255,0.7)]">
-            Major planetary periods influencing your life
-          </p>
+          <h2 className="text-4xl text-[#FFD79A] font-bold mb-4">Life Areas Analysis</h2>
+          <p className="text-white/70">Predictions and guidance for major life aspects</p>
         </motion.div>
 
-        <div className="max-w-4xl mx-auto">
-          <div className="relative">
-            {/* Timeline Line */}
-            <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-[#6C33FF] via-[#4EA3FF] to-[#FFD79A]" />
-
-            {dashaTimeline.map((dasha, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className={`relative mb-8 ${
-                  index % 2 === 0 ? 'md:pr-[calc(50%+3rem)]' : 'md:pl-[calc(50%+3rem)] md:ml-auto'
-                } pl-20 md:pl-0`}
-              >
-                {/* Timeline Node */}
-                <div
-                  className={`absolute top-0 ${
-                    index % 2 === 0 ? 'left-8 md:right-0' : 'left-8 md:left-0'
-                  } w-8 h-8 rounded-full border-4 border-[#0B0B0E] flex items-center justify-center`}
-                  style={{ backgroundColor: dasha.color }}
-                >
-                  <div className="w-2 h-2 rounded-full bg-white" />
-                </div>
-
-                {/* Content Card */}
-                <div className={`
-                  rounded-2xl glass-blur border p-6
-                  ${dasha.status === "current" 
-                    ? "bg-gradient-to-br from-[rgba(255,215,154,0.2)] to-[rgba(214,138,40,0.2)] border-[rgba(255,215,154,0.6)] shadow-[0_0_30px_rgba(255,215,154,0.3)]"
-                    : "bg-[rgba(255,255,255,0.04)] border-[rgba(255,255,255,0.1)]"}
-                `}>
-                  <div className="flex items-center justify-between mb-2">
-                    <h4 className="text-xl text-white" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-                      {dasha.planet} Dasha
-                    </h4>
-                    {dasha.status === "current" && (
-                      <span className="px-3 py-1 rounded-full bg-gradient-to-r from-[#FFD79A] to-[#D68A28] text-[#0B0B0E] text-xs">
-                        Current
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-[rgba(255,255,255,0.7)]">{dasha.period}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Life Areas Predictions */}
-      <section className="relative px-6 md:px-[120px] py-20">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="text-center mb-12"
-        >
-          <h2 className="text-4xl mb-4 text-[#FFD79A]" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-            Life Areas Analysis
-          </h2>
-          <p className="text-[rgba(255,255,255,0.7)]">
-            Predictions and guidance for major life aspects
-          </p>
-        </motion.div>
-
-        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
           {lifeAreas.map((area, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 18 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
+              transition={{ duration: 0.55, delay: index * 0.1 }}
               viewport={{ once: true }}
-              className="rounded-3xl bg-[rgba(255,255,255,0.04)] glass-blur border border-[rgba(255,255,255,0.1)] p-8 hover:border-[rgba(255,215,154,0.4)] transition-all duration-300"
+              className="rounded-3xl bg-white/5 glass-blur border border-white/10 p-8 hover:border-yellow-200/40 transition-all duration-300"
             >
               <div
                 className="w-14 h-14 rounded-xl flex items-center justify-center mb-4"
-                style={{ backgroundColor: area.color + '33', color: area.color }}
+                style={{ backgroundColor: area.color + "33", color: area.color }}
               >
                 {area.icon}
               </div>
-              <h3 className="text-xl mb-3 text-[#FFD79A]" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-                {area.title}
-              </h3>
-              <p className="text-[rgba(255,255,255,0.7)] leading-relaxed">
-                {area.prediction}
-              </p>
+
+              <h3 className="text-xl text-[#FFD79A] font-semibold mb-2">{area.title}</h3>
+
+              <p className="text-white/70">{area.prediction}</p>
             </motion.div>
           ))}
         </div>
       </section>
 
-      {/* Remedies Section */}
+      {/* ——————————————————————————————————————————
+         Remedies
+      ——————————————————————————————————————————— */}
       <section className="relative px-6 md:px-[120px] py-20">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 22 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
           className="text-center mb-12"
         >
-          <h2 className="text-4xl mb-4 text-[#FFD79A]" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-            Recommended Remedies
-          </h2>
-          <p className="text-[rgba(255,255,255,0.7)]">
+          <h2 className="text-4xl text-[#FFD79A] font-bold mb-4">Recommended Remedies</h2>
+          <p className="text-white/70">
             Vedic solutions to enhance positive energies and reduce challenges
           </p>
         </motion.div>
@@ -358,30 +370,43 @@ export default function KundliReadingPage() {
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* ——————————————————————————————————————————
+         CTA Section
+      ——————————————————————————————————————————— */}
       <section className="relative px-6 md:px-[120px] py-20">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.7 }}
           viewport={{ once: true }}
-          className="relative rounded-[32px] bg-gradient-to-br from-[rgba(108,51,255,0.2)] via-[rgba(78,163,255,0.2)] to-[rgba(255,215,154,0.2)] glass-blur border border-[rgba(255,215,154,0.4)] p-12 md:p-16 text-center overflow-hidden max-w-5xl mx-auto"
+          className="relative rounded-[32px] bg-gradient-to-br from-purple-700/20 via-blue-500/20 to-yellow-300/20 glass-blur border border-yellow-200/40 p-12 md:p-16 text-center overflow-hidden max-w-5xl mx-auto shadow-xl shadow-black/30"
         >
           <div className="relative z-10">
-            <h2 className="text-3xl md:text-5xl mb-6 text-white" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+            <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">
               Get Your Personalized Kundli Reading
             </h2>
-            <p className="text-lg text-[rgba(255,255,255,0.8)] mb-10 max-w-2xl mx-auto">
+
+            <p className="text-lg text-white/80 max-w-2xl mx-auto mb-10">
               This is a sample reading. Book a consultation to receive your complete birth chart analysis with detailed predictions and personalized remedies.
             </p>
+
             <EnergyBurstButton onClick={() => navigate("/booking")}>
               <Sparkles className="w-5 h-5" />
               Book Your Reading Now
             </EnergyBurstButton>
           </div>
 
-          <div className="absolute top-10 left-10 w-32 h-32 rounded-full bg-gradient-to-br from-[#6C33FF] to-[#4EA3FF] opacity-20 blur-3xl" />
-          <div className="absolute bottom-10 right-10 w-32 h-32 rounded-full bg-gradient-to-br from-[#FFD79A] to-[#D68A28] opacity-20 blur-3xl" />
+          <motion.div
+            animate={{ opacity: [0.15, 0.3, 0.15] }}
+            transition={{ duration: 6, repeat: Infinity }}
+            className="absolute top-10 left-10 w-40 h-40 rounded-full bg-purple-700/30 blur-3xl"
+          />
+
+          <motion.div
+            animate={{ opacity: [0.15, 0.3, 0.15] }}
+            transition={{ duration: 6, repeat: Infinity, delay: 0.3 }}
+            className="absolute bottom-10 right-10 w-40 h-40 rounded-full bg-yellow-300/30 blur-3xl"
+          />
         </motion.div>
       </section>
     </div>

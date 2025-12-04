@@ -7,9 +7,9 @@ import PricingNodeCard from "../PricingNodeCard";
 import EnergyBurstButton from "../EnergyBurstButton";
 import GlassFormField from "../GlassFormField";
 
-/* -------------------------
-   TYPES
--------------------------- */
+// -------------------------
+// TYPES
+// -------------------------
 interface PricingPlan {
   title: string;
   price: string;
@@ -18,14 +18,14 @@ interface PricingPlan {
   highlighted: boolean;
 }
 
-/* -------------------------
-   PAGE COMPONENT
--------------------------- */
+// -------------------------
+// PAGE COMPONENT
+// -------------------------
 export default function BookingPage() {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
-  const [selectedTime, setSelectedTime] = useState<string>("");
+  const [selectedTime, setSelectedTime] = useState("");
   const [selectedPlan, setSelectedPlan] = useState<PricingPlan | null>(null);
-  const [step, setStep] = useState<number>(1);
+  const [step, setStep] = useState(1);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -37,9 +37,9 @@ export default function BookingPage() {
     concern: "",
   });
 
-  /* -------------------------
-     DATA
-  -------------------------- */
+  // -------------------------
+  // DATA
+  // -------------------------
   const pricingPlans: PricingPlan[] = [
     {
       title: "Basic Reading",
@@ -85,16 +85,16 @@ export default function BookingPage() {
     },
   ];
 
-  const timeSlots: string[] = [
+  const timeSlots = [
     "09:00 AM-12:00 PM",
     "12:00 PM-02:00 PM",
     "02:00 PM-04:00 PM",
     "04:00 PM-06:00 PM",
   ];
 
-  /* -------------------------
-     HANDLERS
-  -------------------------- */
+  // -------------------------
+  // HANDLERS
+  // -------------------------
   const handlePlanSelect = (plan: PricingPlan) => {
     setSelectedPlan(plan);
     setStep(2);
@@ -112,106 +112,151 @@ export default function BookingPage() {
     alert("Booking confirmed! You will receive a confirmation email shortly.");
   };
 
-  /* -------------------------
-     RENDER
-  -------------------------- */
+  // -------------------------
+  // RENDER
+  // -------------------------
   return (
-    <div className="relative pt-32 pb-20 min-h-screen">
+    <div className="relative pt-32 pb-20 min-h-screen overflow-hidden">
+      {/* Background Glow */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.25 }}
+        transition={{ duration: 1.4 }}
+        className="absolute -top-40 -left-40 w-[450px] h-[450px] bg-purple-600/20 blur-[150px] rounded-full pointer-events-none"
+      />
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.22 }}
+        transition={{ duration: 1.5, delay: 0.25 }}
+        className="absolute bottom-0 right-0 w-[480px] h-[480px] bg-blue-500/20 blur-[150px] rounded-full pointer-events-none"
+      />
+
       {/* -------------------------
          HERO SECTION
       -------------------------- */}
       <section className="relative px-6 md:px-[120px] py-12">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 25 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-12 max-w-4xl mx-auto"
+          transition={{ duration: 0.7 }}
+          className="text-center mb-14 max-w-4xl mx-auto"
         >
-          <div className="inline-block mb-6 px-4 py-2 rounded-full bg-[rgba(108,51,255,0.2)] border border-[rgba(108,51,255,0.4)] glass-blur">
-            <span className="text-sm text-[#6C33FF]" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+          <div className="inline-block mb-6 px-4 py-2 rounded-full bg-purple-600/20 border border-purple-600/40 glass-blur">
+            <span className="text-sm text-[#6C33FF] font-medium">
               ✨ Book Your Reading
             </span>
           </div>
 
-          <h1 className="text-5xl md:text-6xl mb-6 text-[#FFD79A]" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+          <h1 className="text-5xl md:text-6xl mb-6 text-[#FFD79A] font-bold">
             Schedule Your Consultation
           </h1>
 
-          <p className="text-lg text-[rgba(255,255,255,0.7)]">
+          <p className="text-lg text-white/70 max-w-2xl mx-auto">
             Choose your plan, select a time, and begin your cosmic journey
           </p>
         </motion.div>
 
         {/* -------------------------
-           PROGRESS STEPS
+           PROGRESS STEPS (refined)
         -------------------------- */}
-        <div className="max-w-3xl mx-auto mb-12">
-          <div className="flex items-center justify-center gap-4">
-            {[{ num: 1, label: "Select Plan" }, { num: 2, label: "Date & Time" }, { num: 3, label: "Your Details" }].map(
-              (stepItem, index) => (
-                <div key={stepItem.num} className="flex items-center">
-                  <div className="flex flex-col items-center">
-                    <div
-                      className={`
-                      w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300
+        <div className="max-w-3xl mx-auto mb-14">
+          <div className="flex items-center justify-center gap-6">
+            {[1, 2, 3].map((num, index) => {
+              const isActive = step >= num;
+              const isDone = step > num;
+
+              return (
+                <div key={num} className="flex items-center">
+                  <motion.div
+                    initial={{ scale: 0.8, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ duration: 0.4, delay: 0.15 * index }}
+                    className={`w-12 h-12 flex items-center justify-center rounded-full 
+                      transition-all duration-300 shadow-lg
                       ${
-                        step >= stepItem.num
-                          ? "bg-gradient-to-br from-[#6C33FF] to-[#4EA3FF] text-white"
-                          : "bg-[rgba(255,255,255,0.04)] glass-blur border border-[rgba(255,255,255,0.1)] text-[rgba(255,255,255,0.5)]"
-                      }
-                    `}
-                    >
-                      {step > stepItem.num ? <Check className="w-5 h-5" /> : stepItem.num}
-                    </div>
-                    <div className="text-xs mt-2 text-[rgba(255,255,255,0.7)] text-center">{stepItem.label}</div>
-                  </div>
+                        isActive
+                          ? "bg-gradient-to-br from-[#6C33FF] to-[#4EA3FF] text-white shadow-purple-500/40"
+                          : "bg-white/5 glass-blur border border-white/10 text-white/50"
+                      }`}
+                  >
+                    {isDone ? <Check className="w-5 h-5" /> : num}
+                  </motion.div>
+
                   {index < 2 && (
                     <div
-                      className={`w-16 h-px mx-4 transition-all duration-300 ${
-                        step > stepItem.num ? "bg-gradient-to-r from-[#6C33FF] to-[#4EA3FF]" : "bg-[rgba(255,255,255,0.1)]"
+                      className={`w-20 h-[2px] mx-4 transition-all duration-300 ${
+                        isDone
+                          ? "bg-gradient-to-r from-[#6C33FF] to-[#4EA3FF]"
+                          : "bg-white/10"
                       }`}
                     />
                   )}
                 </div>
-              )
-            )}
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* -------------------------
+      {/* ——————————————————————————————————————
          STEP 1 — SELECT PLAN
-      -------------------------- */}
+      ——————————————————————————————————————— */}
       {step === 1 && (
-        <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="relative px-6 md:px-[120px] py-12">
+        <motion.section
+          initial={{ opacity: 0, y: 25 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="relative px-6 md:px-[120px] py-12"
+        >
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
             {pricingPlans.map((plan, index) => (
-              <PricingNodeCard
-                key={index}
-                title={plan.title}
-                price={plan.price}
-                duration={plan.duration}
-                features={plan.features}
-                highlighted={plan.highlighted}
-                delay={index * 0.1}
-                onSelect={() => handlePlanSelect(plan)}
-              />
+              <motion.div
+                key={plan.title}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: 0.6,
+                  delay: index * 0.12,
+                  ease: "easeOut",
+                }}
+              >
+                <PricingNodeCard
+                  title={plan.title}
+                  price={plan.price}
+                  duration={plan.duration}
+                  features={plan.features}
+                  highlighted={plan.highlighted}
+                  delay={index * 0.1}
+                  onSelect={() => handlePlanSelect(plan)}
+                />
+              </motion.div>
             ))}
           </div>
         </motion.section>
       )}
 
-      {/* -------------------------
+      {/* ——————————————————————————————————————
          STEP 2 — DATE & TIME
-      -------------------------- */}
+      ——————————————————————————————————————— */}
       {step === 2 && (
-        <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="relative px-6 md:px-[120px] py-12">
-          <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Left Section */}
+        <motion.section
+          initial={{ opacity: 0, y: 25 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="relative px-6 md:px-[120px] py-14"
+        >
+          <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10">
+            {/* LEFT SIDE */}
             <div className="space-y-8">
+
               {/* Calendar */}
-              <div className="rounded-3xl bg-[rgba(255,255,255,0.04)] glass-blur border border-[rgba(255,255,255,0.1)] p-8">
-                <h3 className="text-xl mb-6 text-[#FFD79A] flex items-center gap-2" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                className="rounded-3xl bg-white/5 glass-blur border border-white/10 p-8 shadow-xl shadow-black/20"
+              >
+                <h3 className="text-xl mb-6 text-[#FFD79A] font-semibold flex items-center gap-2">
                   <CalendarIcon className="w-5 h-5" />
                   Select Date
                 </h3>
@@ -220,14 +265,19 @@ export default function BookingPage() {
                   mode="single"
                   selected={selectedDate}
                   onSelect={setSelectedDate}
-                  className="rounded-xl"
                   disabled={(date) => date < new Date()}
+                  className="rounded-xl"
                 />
-              </div>
+              </motion.div>
 
               {/* Time Slots */}
-              <div className="rounded-3xl bg-[rgba(255,255,255,0.04)] glass-blur border border-[rgba(255,255,255,0.1)] p-8">
-                <h3 className="text-xl mb-6 text-[#FFD79A] flex items-center gap-2" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+              <motion.div
+                initial={{ opacity: 0, y: 22 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.15 }}
+                className="rounded-3xl bg-white/5 glass-blur border border-white/10 p-8 shadow-xl shadow-black/20"
+              >
+                <h3 className="text-xl mb-6 text-[#FFD79A] font-semibold flex items-center gap-2">
                   <Clock className="w-5 h-5" />
                   Select Time
                 </h3>
@@ -237,162 +287,147 @@ export default function BookingPage() {
                     <button
                       key={time}
                       onClick={() => handleTimeSelect(time)}
-                      className={`
-                        px-4 py-3 rounded-xl transition-all duration-300
+                      className={`px-4 py-3 rounded-xl transition-all duration-300 text-sm shadow-md
                         ${
                           selectedTime === time
-                            ? "bg-gradient-to-r from-[#6C33FF] to-[#4EA3FF] text-white border-transparent"
-                            : "bg-[rgba(255,255,255,0.04)] glass-blur border border-[rgba(255,255,255,0.1)] text-[rgba(255,255,255,0.7)] hover:border-[rgba(255,215,154,0.4)]"
-                        }
-                      `}
+                            ? "bg-gradient-to-r from-[#6C33FF] to-[#4EA3FF] text-white shadow-purple-600/30"
+                            : "bg-white/5 glass-blur border border-white/10 text-white/75 hover:border-[#FFD79A]/40"
+                        }`}
                     >
                       {time}
                     </button>
                   ))}
                 </div>
-              </div>
+              </motion.div>
             </div>
 
-            {/* Right: Booking Summary */}
-            <div className="lg:sticky lg:top-32 h-fit">
-              <div className="rounded-3xl bg-gradient-to-br from-[rgba(108,51,255,0.15)] to-[rgba(78,163,255,0.15)] glass-blur border border-[rgba(255,215,154,0.3)] p-8">
-                <h3 className="text-2xl mb-6 text-[#FFD79A]" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-                  Booking Summary
-                </h3>
+            {/* RIGHT SIDE: Booking Summary */}
+            <motion.div
+              initial={{ opacity: 0, y: 22 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.25 }}
+              className="lg:sticky lg:top-32 h-fit"
+            >
+              <div className="rounded-3xl bg-gradient-to-br from-purple-700/20 to-blue-500/20 glass-blur border border-yellow-200/30 p-8 shadow-xl shadow-black/20">
+                <h3 className="text-2xl mb-6 text-[#FFD79A] font-semibold">Booking Summary</h3>
 
-                <div className="space-y-4 mb-8">
-                  <div className="flex justify-between items-start">
-                    <span className="text-[rgba(255,255,255,0.7)]">Plan:</span>
-                    <span className="text-white">{selectedPlan?.title}</span>
-                  </div>
-
-                  <div className="flex justify-between items-start">
-                    <span className="text-[rgba(255,255,255,0.7)]">Duration:</span>
-                    <span className="text-white">{selectedPlan?.duration}</span>
-                  </div>
-
-                  <div className="flex justify-between items-start">
-                    <span className="text-[rgba(255,255,255,0.7)]">Date:</span>
-                    <span className="text-white">{selectedDate?.toLocaleDateString()}</span>
-                  </div>
-
-                  <div className="flex justify-between items-start">
-                    <span className="text-[rgba(255,255,255,0.7)]">Time:</span>
-                    <span className="text-white">{selectedTime || "Not selected"}</span>
-                  </div>
+                {/* Summary Info */}
+                <div className="space-y-4 mb-8 text-white/80">
+                  <SummaryRow label="Plan" value={selectedPlan?.title} />
+                  <SummaryRow label="Duration" value={selectedPlan?.duration} />
+                  <SummaryRow label="Date" value={selectedDate?.toLocaleDateString()} />
+                  <SummaryRow label="Time" value={selectedTime || "Not selected"} />
 
                   <div className="golden-thread my-6" />
 
                   <div className="flex justify-between items-center">
-                    <span className="text-xl text-[#FFD79A]" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-                      Total:
-                    </span>
-                    <span className="text-3xl text-[#FFD79A]" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-                      ₹{selectedPlan?.price}
-                    </span>
+                    <span className="text-xl text-[#FFD79A] font-semibold">Total:</span>
+                    <span className="text-3xl text-[#FFD79A] font-bold">₹{selectedPlan?.price}</span>
                   </div>
                 </div>
 
                 <div className="space-y-3">
                   <button
                     onClick={() => setStep(1)}
-                    className="w-full px-8 py-3 rounded-full bg-[rgba(255,255,255,0.06)] glass-blur border border-[rgba(255,255,255,0.1)] text-white hover:border-[rgba(255,215,154,0.4)] transition-all duration-300"
-                    style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+                    className="w-full px-8 py-3 rounded-full bg-white/5 glass-blur border border-white/10 text-white hover:border-yellow-200/40 transition-all duration-300"
                   >
                     Change Plan
                   </button>
 
-                  <EnergyBurstButton onClick={() => setStep(3)} className="w-full" disabled={!selectedTime}>
+                  <EnergyBurstButton
+                    onClick={() => setStep(3)}
+                    className="w-full"
+                    disabled={!selectedTime}
+                  >
                     Continue to Details
                   </EnergyBurstButton>
                 </div>
               </div>
-            </div>
+            </motion.div>
           </div>
         </motion.section>
       )}
 
-      {/* -------------------------
+      {/* ——————————————————————————————————————
          STEP 3 — PERSONAL DETAILS
-      -------------------------- */}
+      ——————————————————————————————————————— */}
       {step === 3 && (
-        <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="relative px-6 md:px-[120px] py-12">
-          <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Form */}
-            <div className="rounded-3xl bg-[rgba(255,255,255,0.04)] glass-blur border border-[rgba(255,255,255,0.1)] p-8">
-              <h3 className="text-2xl mb-8 text-[#FFD79A]" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-                Your Details
-              </h3>
+        <motion.section
+          initial={{ opacity: 0, y: 25 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="relative px-6 md:px-[120px] py-14"
+        >
+          <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10">
+
+            {/* DETAILS FORM */}
+            <motion.div
+              initial={{ opacity: 0, y: 25 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7 }}
+              className="rounded-3xl bg-white/5 glass-blur border border-white/10 p-8 shadow-xl shadow-black/20"
+            >
+              <h3 className="text-2xl mb-8 text-[#FFD79A] font-semibold">Your Details</h3>
 
               <div className="space-y-6">
-                <GlassFormField label="Full Name" type="text" placeholder="Enter your full name" value={formData.name} onChange={(e: { target: { value: string; }; }) => handleInputChange("name", e.target.value)} required />
+                <GlassFormField label="Full Name" type="text" placeholder="Enter your full name"
+                  value={formData.name} onChange={(e: { target: { value: string; }; }) => handleInputChange("name", e.target.value)} required />
 
-                <GlassFormField label="Email Address" type="email" placeholder="your.email@example.com" value={formData.email} onChange={(e: { target: { value: string; }; }) => handleInputChange("email", e.target.value)} required />
+                <GlassFormField label="Email Address" type="email" placeholder="your.email@example.com"
+                  value={formData.email} onChange={(e: { target: { value: string; }; }) => handleInputChange("email", e.target.value)} required />
 
-                <GlassFormField label="Phone Number" type="tel" placeholder="+91 98765 43210" value={formData.phone} onChange={(e: { target: { value: string; }; }) => handleInputChange("phone", e.target.value)} required />
+                <GlassFormField label="Phone Number" type="tel" placeholder="+91 98765 43210"
+                  value={formData.phone} onChange={(e: { target: { value: string; }; }) => handleInputChange("phone", e.target.value)} required />
 
                 <div className="golden-thread my-8" />
 
-                <h4 className="text-lg text-[#FFD79A] mb-4" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-                  Birth Details (for chart preparation)
-                </h4>
+                <h4 className="text-lg text-[#FFD79A] mb-4 font-semibold">Birth Details</h4>
 
-                <GlassFormField label="Date of Birth" type="date" value={formData.birthDate} onChange={(e: { target: { value: string; }; }) => handleInputChange("birthDate", e.target.value)} required placeholder={undefined} />
+                <GlassFormField label="Date of Birth" type="date"
+                value={formData.birthDate} onChange={(e: { target: { value: string; }; }) => handleInputChange("birthDate", e.target.value)} required placeholder={undefined} />
 
-                <GlassFormField label="Time of Birth" type="time" value={formData.birthTime} onChange={(e: { target: { value: string; }; }) => handleInputChange("birthTime", e.target.value)} required placeholder={undefined} />
+                <GlassFormField label="Time of Birth" type="time"
+                value={formData.birthTime} onChange={(e: { target: { value: string; }; }) => handleInputChange("birthTime", e.target.value)} required placeholder={undefined} />
 
-                <GlassFormField label="Place of Birth" type="text" placeholder="City, State, Country" value={formData.birthPlace} onChange={(e: { target: { value: string; }; }) => handleInputChange("birthPlace", e.target.value)} required />
+                <GlassFormField label="Place of Birth" type="text" placeholder="City, State, Country"
+                  value={formData.birthPlace} onChange={(e: { target: { value: string; }; }) => handleInputChange("birthPlace", e.target.value)} required />
 
                 <GlassFormField
-                  label="Main Concern / Questions"
-                  as="textarea"
+                  label="Main Concern / Questions" as="textarea"
                   placeholder="What specific areas would you like guidance on?"
                   value={formData.concern}
                   onChange={(e: { target: { value: string; }; }) => handleInputChange("concern", e.target.value)}
                 />
               </div>
-            </div>
+            </motion.div>
 
-            {/* Summary + Payment */}
-            <div className="lg:sticky lg:top-32 h-fit space-y-6">
-              <div className="rounded-3xl bg-gradient-to-br from-[rgba(108,51,255,0.15)] to-[rgba(78,163,255,0.15)] glass-blur border border-[rgba(255,215,154,0.3)] p-8">
-                <h3 className="text-2xl mb-6 text-[#FFD79A]" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-                  Final Summary
-                </h3>
+            {/* FINAL SUMMARY */}
+            <motion.div
+              initial={{ opacity: 0, y: 25 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.15 }}
+              className="lg:sticky lg:top-32 h-fit space-y-6"
+            >
+              <div className="rounded-3xl bg-gradient-to-br from-purple-700/20 to-blue-500/20 glass-blur border border-yellow-200/30 p-8 shadow-xl shadow-black/20">
+                <h3 className="text-2xl mb-6 text-[#FFD79A] font-semibold">Final Summary</h3>
 
-                <div className="space-y-3 mb-6">
-                  <div className="flex justify-between">
-                    <span className="text-[rgba(255,255,255,0.7)]">Plan:</span>
-                    <span className="text-white">{selectedPlan?.title}</span>
-                  </div>
-
-                  <div className="flex justify-between">
-                    <span className="text-[rgba(255,255,255,0.7)]">Date:</span>
-                    <span className="text-white">{selectedDate?.toLocaleDateString()}</span>
-                  </div>
-
-                  <div className="flex justify-between">
-                    <span className="text-[rgba(255,255,255,0.7)]">Time:</span>
-                    <span className="text-white">{selectedTime}</span>
-                  </div>
+                <div className="space-y-4 mb-6 text-white/80">
+                  <SummaryRow label="Plan" value={selectedPlan?.title} />
+                  <SummaryRow label="Date" value={selectedDate?.toLocaleDateString()} />
+                  <SummaryRow label="Time" value={selectedTime} />
 
                   <div className="golden-thread my-4" />
 
                   <div className="flex justify-between items-center text-xl">
-                    <span className="text-[#FFD79A]" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-                      Total Amount:
-                    </span>
-                    <span className="text-3xl text-[#FFD79A]" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-                      ₹{selectedPlan?.price}
-                    </span>
+                    <span className="text-[#FFD79A] font-semibold">Total Amount:</span>
+                    <span className="text-3xl text-[#FFD79A] font-bold">₹{selectedPlan?.price}</span>
                   </div>
                 </div>
 
                 <div className="space-y-3">
                   <button
                     onClick={() => setStep(2)}
-                    className="w-full px-8 py-3 rounded-full bg-[rgba(255,255,255,0.06)] glass-blur border border-[rgba(255,255,255,0.1)] text-white hover:border-[rgba(255,215,154,0.4)] transition-all duration-300"
-                    style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+                    className="w-full px-8 py-3 rounded-full bg-white/5 glass-blur border border-white/10 text-white hover:border-yellow-200/40 transition-all duration-300"
                   >
                     Back to Date & Time
                   </button>
@@ -402,28 +437,45 @@ export default function BookingPage() {
                   </EnergyBurstButton>
                 </div>
 
-                <p className="text-xs text-[rgba(255,255,255,0.5)] mt-4 text-center">Secure payment powered by Razorpay</p>
+                <p className="text-xs text-white/50 mt-4 text-center">
+                  Secure payment powered by Razorpay
+                </p>
               </div>
 
-              {/* Benefits Reminder */}
-              <div className="rounded-2xl bg-[rgba(255,255,255,0.04)] glass-blur border border-[rgba(255,255,255,0.1)] p-6">
-                <h4 className="text-lg mb-4 text-[#FFD79A]" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-                  What You'll Receive:
-                </h4>
+              {/* BENEFITS */}
+              <motion.div
+                initial={{ opacity: 0, y: 22 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+                className="rounded-2xl bg-white/5 glass-blur border border-white/10 p-6"
+              >
+                <h4 className="text-lg mb-4 text-[#FFD79A] font-semibold">What You'll Receive:</h4>
 
                 <ul className="space-y-2">
                   {selectedPlan?.features.map((feature, index) => (
-                    <li key={index} className="flex items-start gap-2 text-sm text-[rgba(255,255,255,0.7)]">
-                      <Check className="w-4 h-4 text-[#6C33FF] mt-0.5 flex-shrink-0" />
+                    <li key={index} className="flex items-start gap-2 text-white/70 text-sm">
+                      <Check className="w-4 h-4 text-[#6C33FF] flex-shrink-0 mt-0.5" />
                       {feature}
                     </li>
                   ))}
                 </ul>
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
           </div>
         </motion.section>
       )}
+    </div>
+  );
+}
+
+// —————————————————————————————————————————
+// SMALL SUB COMPONENT FOR REPEATED ROWS
+// —————————————————————————————————————————
+function SummaryRow({ label, value }:{ label:string; value:any }) {
+  return (
+    <div className="flex justify-between">
+      <span className="text-white/70 text-sm">{label}:</span>
+      <span className="text-white text-sm">{value}</span>
     </div>
   );
 }

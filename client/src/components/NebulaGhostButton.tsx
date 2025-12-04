@@ -1,28 +1,35 @@
 import { motion } from "motion/react";
 
-export default function NebulaGhostButton({ children, onClick, className = "" }) {
+export default function NebulaGhostButton({
+  children,
+  onClick,
+  type = "button",
+  className = "",
+}: {
+  children: any;
+  onClick?: () => void;
+  type?: "button" | "submit" | "reset";
+  className?: string;
+}) {
   return (
     <motion.button
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
+      whileHover={{ scale: 1.05, boxShadow: "0 0 25px rgba(255,215,154,0.4)" }}
+      whileTap={{ scale: 0.97 }}
       onClick={onClick}
-      className={`relative px-8 py-4 rounded-full bg-[rgba(255,255,255,0.04)] glass-blur border-2 border-transparent text-white overflow-hidden group ${className}`}
-      style={{ 
-        fontFamily: "'Space Grotesk', sans-serif",
-        borderImage: "linear-gradient(135deg, #6C33FF, #4EA3FF) 1"
-      }}
+      type={type}
+      className={`
+        px-8 py-3 rounded-xl
+        bg-[rgba(255,255,255,0.05)]
+        border border-[rgba(255,255,255,0.15)]
+        backdrop-blur-md
+        text-white font-medium
+        transition-all duration-300
+        hover:border-[rgba(255,215,154,0.5)]
+        hover:text-[#FFD79A]
+        ${className}
+      `}
     >
-      {/* Gradient Border Animation */}
-      <div className="absolute inset-0 rounded-full p-[2px] bg-gradient-to-r from-[#6C33FF] via-[#4EA3FF] to-[#6C33FF] bg-[length:200%_100%] group-hover:animate-[gradient-shift_2s_linear_infinite]" style={{ WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)", WebkitMaskComposite: "xor", maskComposite: "exclude" }}>
-      </div>
-
-      {/* Button Content */}
-      <span className="relative z-10 flex items-center gap-2 justify-center">
-        {children}
-      </span>
-
-      {/* Nebula Glow on Hover */}
-      <div className="absolute inset-0 rounded-full bg-gradient-to-r from-[rgba(108,51,255,0.2)] to-[rgba(78,163,255,0.2)] opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-md" />
+      {children}
     </motion.button>
   );
 }
